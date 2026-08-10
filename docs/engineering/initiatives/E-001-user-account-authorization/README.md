@@ -137,7 +137,7 @@ Phases are completed in order unless a documented dependency requires otherwise.
 
 ### Phase 3 — Migrate frontend account flows
 
-**Status:** Not started
+**Status:** Completed (2026-08-07)
 
 #### Changes
 
@@ -147,15 +147,15 @@ Phases are completed in order unless a documented dependency requires otherwise.
 
 #### Tests and validation
 
-- [ ] Frontend unit tests for data access and store reset.
-- [ ] Browser E2E for login, profile update, logout, and user-switch isolation.
+- [x] Frontend unit tests for data access and store reset.
+- [x] Browser E2E for login, profile update, logout, and user-switch isolation.
 
 #### Phase completion rule
 
-- [ ] All scoped changes are implemented or explicitly documented as not applicable.
-- [ ] Every required automated test passes.
-- [ ] Required manual, staging, migration, or operational evidence is attached.
-- [ ] The initiative `Work Status` section is updated with verified evidence.
+- [x] All scoped changes are implemented or explicitly documented as not applicable.
+- [x] Every required automated test passes.
+- [x] No manual, staging, migration, or operational evidence is required for this frontend-only phase.
+- [x] The initiative `Work Status` section is updated with verified evidence.
 
 ### Phase 4 — Complete account closure behavior
 
@@ -198,6 +198,15 @@ Phases are completed in order unless a documented dependency requires otherwise.
   - Validation evidence: `dotnet build src/Appetee.Api/Appetee.Api.csproj --configuration Release --no-restore` passed with 0 warnings and 0 errors.
   - Validation evidence: `dotnet test tests/Appetee.Api.Tests/Appetee.Api.Tests.csproj --no-restore` passed 46/46 tests with 0 failures and 0 skips.
   - Follow-up (2026-08-07): restored the unauthenticated email-availability check under `GET /api/auth/exists-by-email`; the legacy user-controller route remains disabled. `dotnet test tests/Appetee.Api.Tests/Appetee.Api.Tests.csproj --no-restore` passed 50/50 tests with 0 failures and 0 skips.
+- Phase 3 — Migrate frontend account flows (2026-08-07)
+  - Added the authenticated `/profile` route with loading, retry, validation, submitting, error, and success states.
+  - Profile reads and updates use only `GET /api/users/me` and `PUT /api/users/me`; update payloads contain only `username` and `imageUrl` and cannot carry an account or owner ID.
+  - The private header now reads the resettable current-profile store so profile changes and identity switches cannot retain a previous username.
+  - Login, sign-up, failed session restoration, and logout clear every registered user-scoped store at the identity boundary.
+  - Validation evidence: `npx --no-install tsc --noEmit -p tsconfig.app.json` and `npx --no-install tsc --noEmit -p tsconfig.spec.json` passed.
+  - Validation evidence: `npm run test -- --watch=false` passed 47/47 executed tests across 13 files; one pre-existing sign-up test remains explicitly skipped.
+  - Validation evidence: `npm run e2e` passed the Chromium login, claim-scoped profile update, logout, and user-switch isolation scenario (1/1).
+  - Validation evidence: `npm run build` passed; the existing `admin-recipes.page.scss` component-style budget warning remains unrelated to this phase.
 
 ### In Progress
 
@@ -208,7 +217,7 @@ None.
 - [ ] All consumer account operations are claim-scoped.
 - [x] The general user list is absent from the consumer API.
 - [x] Cross-account and anonymous requests are denied without distinguishable personal-data leakage.
-- [ ] Frontend code no longer supplies an account owner ID for self-service operations.
+- [x] Frontend code no longer supplies an account owner ID for self-service operations.
 - [ ] Deletion semantics and tests cover database, session, media, logs, and retained backups.
 
 ## Risks and Edge Cases
@@ -240,7 +249,7 @@ None.
 - [ ] All consumer account operations are claim-scoped.
 - [ ] The general user list is absent from the consumer API.
 - [ ] Cross-account and anonymous requests are denied without distinguishable personal-data leakage.
-- [ ] Frontend code no longer supplies an account owner ID for self-service operations.
+- [x] Frontend code no longer supplies an account owner ID for self-service operations.
 - [ ] Deletion semantics and tests cover database, session, media, logs, and retained backups.
 
 ## Decisions
