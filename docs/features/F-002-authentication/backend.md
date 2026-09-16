@@ -1,10 +1,10 @@
 # F-002 — Authentication: Backend Design
 
 **Status:** Active
-**Implementation status:** Partially implemented
-**Version:** 1.0
+**Implementation status:** Phases 1–4 implemented; Phase 4 production ACS Email validation pending
+**Version:** 1.3
 **Owner:** Mathieu Galidie
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-21
 **Dependencies:** F-003, F-004, F-008
 **Related engineering initiatives:** E-004, E-005, E-008, E-017
 
@@ -23,22 +23,33 @@ This document defines backend-specific behavior for credentials, cookie sessions
 - `AuthController` exposes `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/session`, and sign-up integration.
 - `AuthService` validates input, verifies credentials through auth queries, creates the authentication ticket, and signs out.
 - Cookie authentication returns `401` and `403` status codes rather than HTML redirects.
-- Cookie configuration is HttpOnly, Secure, `SameSite=None`, uses a configurable expiration value, and enables sliding expiration.
+- Login accepts and validates the `rememberMe` intent while preserving generic invalid-credential behavior.
+- Login outcomes distinguish authenticated, invalid-credential, and verification-required results without issuing a cookie for failures.
+- Non-remembered login creates a browser-session cookie; remembered login creates a seven-day persistent cookie.
+- Sliding renewal uses a shared server clock, while an immutable issuance claim enforces the 30-day absolute reauthentication limit.
+- Expired or rejected cookies return `401` with `code: "session_expired"` and the approved message.
+- Cookie configuration is HttpOnly, Secure, and `SameSite=None`.
 - `GET /api/users/me` validates the authenticated principal and returns the current user.
 - Password hashing uses the registered `IPasswordHasher` implementation.
+- Anonymous recovery request and confirmation endpoints are implemented with generic request outcomes and a stable invalid-token error.
+- Recovery issuance stores only a SHA-256 hash of a 256-bit random token and applies a serialized 60-second per-account cooldown.
+- Recovery confirmation locks the token row, enforces the 60-minute lifetime, replaces the password, and invalidates all outstanding account tokens in one transaction.
+- Azure Communication Services Email delivery is implemented behind `IPasswordRecoveryEmailSender` using the official singleton `EmailClient`; failed delivery removes the undelivered token without logging the bearer secret.
+- Local Development can load `CommunicationEmail:AccessKey` from the `CommunicationEmail--AccessKey` Key Vault secret through `DefaultAzureCredential`; App Service consumes its platform-resolved Key Vault reference as ordinary configuration.
+- `Program.cs` is a minimal composition root; API, infrastructure, authentication, application, and middleware registration live in focused startup extensions with typed validation.
 
 ### Known gaps
 
-- Login has no Remember Me input or per-request persistence choice.
-- Approved seven-day remembered and browser-session behavior is not represented as a complete contract.
-- The absolute reauthentication limit and user-visible expiration reason are not present.
-- Pending verification is not represented in login outcomes.
-- Password recovery, password change, server-side session records, and revocation APIs are absent.
+- Password change, server-side session records, and revocation APIs are absent.
+- Production ACS endpoint, sender, and Key Vault-backed access key remain deployment configuration and require a live delivery check. Startup fails when the endpoint is not absolute HTTPS or any required ACS setting is missing or invalid.
+- Persisted verification status is not yet available to the login query; F-004 will supply that state to the implemented verification-required outcome.
+- Login throttling remains E-004 work.
+- Disabled/deleted-account, password-change, permission-change, copied-cookie, and explicit-revocation validation remain E-005 work.
 
 ## Affected Modules
 
-- API: `AuthController`, future recovery/session endpoints, `UsersController` current-user lookup.
-- Application: `AuthService`, auth contracts, password policy, recovery/change/session use cases.
+- API: `AuthController`, future session endpoints, `UsersController` current-user lookup.
+- Application: `AuthService`, `PasswordRecoveryService`, auth contracts, password policy, change/session use cases.
 - Domain: account verification status and future session/recovery entities where introduced.
 - Infrastructure: auth queries/repository, password hasher, cookie service, token storage, email delivery integration, database migrations.
 
@@ -60,7 +71,7 @@ This document defines backend-specific behavior for credentials, cookie sessions
 - Server-owned fields: principal validity and current account eligibility.
 - Authorization and ownership: only the authenticated principal's session.
 - Success result: session summary.
-- Failure behavior: `401` for missing, invalid, expired, or revoked session.
+- Failure behavior: `401` for missing authentication; expired or rejected cookies additionally return `code: "session_expired"` and the approved user message.
 
 ### Use Case 3 — Log out
 
@@ -102,8 +113,8 @@ This document defines backend-specific behavior for credentials, cookie sessions
 | Login | `POST /api/auth/login` | Guest | Email, password, Remember Me; generic invalid result. |
 | Restore session | `GET /api/auth/session` | Authenticated cookie | Returns current session summary. |
 | Logout | `POST /api/auth/logout` | Current session | Ends current browser session. |
-| Request recovery | Route to be finalized | Guest | Generic response regardless of account existence. |
-| Confirm recovery | Route to be finalized | Guest with token | Single-use, time-limited token. |
+| Request recovery | `POST /api/auth/password-recovery/request` | Guest | Generic `202` regardless of account existence or hidden cooldown. |
+| Confirm recovery | `POST /api/auth/password-recovery/confirm` | Guest with token | `204` on success; one stable `400` for invalid, expired, or used proof. |
 | Change password | Route to be finalized | Authenticated user | Requires current password. |
 | List sessions | Route to be finalized | Authenticated user | Own sessions only. |
 | Revoke session | Route to be finalized | Authenticated user | Own session only. |
@@ -118,6 +129,38 @@ This document defines backend-specific behavior for credentials, cookie sessions
 - Remember Me changes persistence; it does not weaken server validation.
 - State-changing authentication operations follow E-005's request-intent protections.
 - Do not store raw recovery or session secrets.
+- Keep the public reset-page URL in environment-specific configuration and point it to the frontend `/auth/reset-password` route. Keep the ACS access key in Key Vault, never tracked JSON, local user secrets, or source code.
+
+### Password-recovery email configuration
+
+The backend binds these environment-specific settings:
+
+| ASP.NET key | Environment-variable form | Source |
+|---|---|---|
+| `PasswordRecovery:ResetPageUrl` | `PasswordRecovery__ResetPageUrl` | Local/deployed frontend URL; non-secret |
+| `CommunicationEmail:Endpoint` | `CommunicationEmail__Endpoint` | ACS Communication Service endpoint; non-secret |
+| `CommunicationEmail:FromAddress` | `CommunicationEmail__FromAddress` | Verified ACS MailFrom address; non-secret |
+| `CommunicationEmail:AccessKey` | `CommunicationEmail__AccessKey` | Key Vault secret `CommunicationEmail--AccessKey`; secret |
+| `KeyVault:Uri` | `KeyVault__Uri` | Local Development Key Vault URI; non-secret |
+
+For local Development, set `KeyVault:Uri`, `CommunicationEmail:Endpoint`, and `CommunicationEmail:FromAddress` in development configuration or environment variables. Sign in with Azure CLI or Visual Studio so `DefaultAzureCredential` can read `CommunicationEmail--AccessKey`; never copy the key into local JSON. A local configuration shape may use placeholders such as:
+
+```json
+{
+  "KeyVault": {
+    "Uri": "https://<YOUR-KEY-VAULT>.vault.azure.net/"
+  },
+  "CommunicationEmail": {
+    "Endpoint": "https://<YOUR-ACS-RESOURCE>.communication.azure.com",
+    "FromAddress": "DoNotReply@<YOUR-AZURE-MANAGED-DOMAIN>.azurecomm.net"
+  },
+  "PasswordRecovery": {
+    "ResetPageUrl": "https://localhost:4200/auth/reset-password"
+  }
+}
+```
+
+For an Azure development slot and production, configure the four environment-variable forms above in App Service. `CommunicationEmail__AccessKey` must be an App Service Key Vault reference to `CommunicationEmail--AccessKey`; App Service resolves it through its managed identity with the `Key Vault Secrets User` role. The application does not resolve App Service Key Vault references itself.
 
 ## Transactions, Idempotency, and Failure Recovery
 
@@ -141,36 +184,36 @@ This document defines backend-specific behavior for credentials, cookie sessions
 
 ### Phase 2 — Login experience completion
 
-**Status:** Not started
+**Status:** Completed
 
-- Changes: Extend login contract with Remember Me intent and stable product outcomes.
+- Changes: Login contract includes Remember Me intent; invalid credentials and verification-required results have stable product outcomes.
 - Migration: None required unless session records are introduced early.
 - Authorization and ownership: Anonymous login endpoint with no account disclosure.
-- Unit tests: Validation and result mapping.
-- Integration tests: Generic invalid message and pending-verification outcome.
-- Failure and negative tests: Invalid email, wrong password, throttling behavior through E-004.
+- Unit tests: Validation, normalized email, Remember Me forwarding, and result mapping are covered.
+- Integration tests: Generic invalid message and pending-verification outcome are covered without cookie issuance.
+- Failure and negative tests: Invalid email and wrong password are covered; throttling remains E-004.
 
 ### Phase 3 — Remembered sessions and expiration experience
 
-**Status:** Not started
+**Status:** Completed
 
-- Changes: Browser-session versus seven-day persistence, sliding renewal, 30-day absolute limit, and revocation/validation integration.
-- Migration: Add session/security-version data if the selected E-005 design requires it.
-- Authorization and ownership: Session records belong to one user.
-- Unit tests: Cookie properties and expiry calculations.
-- Integration tests: Refresh, expiry, revocation, and concurrent devices.
-- Failure and negative tests: Stale, copied, disabled, changed-password, and revoked tickets as defined by E-005.
+- Changes: Browser-session versus seven-day persistence, sliding renewal, 30-day absolute limit, stable expiration response, and independent browser sessions are implemented.
+- Migration: None; Phase 3 uses protected cookie tickets. Future E-005 session/security-version storage requires a separate migration.
+- Authorization and ownership: Each ticket identifies one authenticated user; multiple browser tickets are permitted and logout clears only the current browser.
+- Unit tests: Cookie properties, fail-closed issuance-claim parsing, and absolute-expiry calculations are covered.
+- Integration tests: Cookie attributes, idle expiry, sliding renewal, absolute expiry, and concurrent browsers are covered.
+- Failure and negative tests: Missing, malformed, idle-expired, and absolute-expired tickets are covered. Copied, disabled, changed-password, and explicitly revoked tickets remain E-005 work.
 
 ### Phase 4 — Password recovery
 
-**Status:** Not started
+**Status:** Implemented — production ACS Email configuration and live delivery validation pending
 
-- Changes: Request, token generation, confirmation, password replacement, and token invalidation.
-- Migration: Recovery-token storage and indexes.
-- Authorization and ownership: Token proves possession; responses do not disclose account existence.
-- Unit tests: Token lifecycle and password policy.
-- Integration tests: Valid, expired, used, invalid, and repeat requests.
-- Failure and negative tests: Enumeration, concurrency, and email-delivery failure.
+- Changes: Generic request, 256-bit token generation, SHA-256 storage hash, ACS Email SDK delivery, confirmation, password replacement, and account-wide token invalidation are implemented.
+- Migration: `20260823_005_f002_phase4_password_recovery.sql` adds unique token-hash lookup and the user/creation-time cooldown index.
+- Authorization and ownership: The anonymous request ignores ambient session identity; the bearer token proves reset possession, and request responses do not disclose account existence.
+- Unit tests: Token generation/hashing, generic outcomes, delivery cleanup, invalid-token mapping, and the 8–128 character password boundary are covered.
+- Integration tests: Valid, expired, used, unknown, repeated, throttled issuance, and password-login replacement paths are covered.
+- Failure and negative tests: Known/unknown response parity, concurrent consumption, ACS failure cleanup, sensitive-data-safe logging, startup configuration validation, and forward-migration indexes are covered.
 
 ### Phase 5 — Password change
 
@@ -197,9 +240,11 @@ This document defines backend-specific behavior for credentials, cookie sessions
 ## Validation Commands
 
 ```text
-dotnet build Appetee.sln
-dotnet test Appetee.sln
+dotnet build Appetee.sln --configuration Release --no-restore
+dotnet test tests/Appetee.Api.Tests/Appetee.Api.Tests.csproj --configuration Release --no-restore
 ```
+
+Recorded Phase 4 validation includes a warning-free build, the complete API test suite, focused recovery coverage, and a forward-migration index check. Exact test totals are intentionally omitted so this design document does not become stale as unrelated backend tests are added.
 
 ## Backend Decisions
 
@@ -207,6 +252,8 @@ dotnet test Appetee.sln
 - F-004 owns verification tokens and pending-account activation; F-002 consumes account status during login.
 - Cookie/session security implementation details remain canonical in E-005.
 - Abuse thresholds remain canonical in E-004.
+- Remember Me is false by default, uses a browser-session cookie when false, and uses a seven-day persistent cookie when true.
+- Sliding activity may renew the seven-day idle window, but never the 30-day absolute lifetime.
 
 ## Open Questions
 

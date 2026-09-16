@@ -31,6 +31,7 @@ This directory contains only engineering initiative folders. Every initiative us
 | 16 | E-016 — Privacy, Data Lifecycle, and Account Closure | Medium | Ready for implementation | [Open](./E-016-privacy-and-data-lifecycle/README.md) |
 | 17 | E-017 — Testing Strategy and Mandatory Quality Gates | High | Ready for implementation | [Open](./E-017-testing-and-quality-gates/README.md) |
 | 18 | E-018 — Codebase Maintainability and Operational Documentation | Medium | Ready for implementation | [Open](./E-018-maintainability-and-documentation/README.md) |
+| 20 | E-020 — Development Data Bootstrap and Azure Dataset Media | Medium | Completed — 2026-08-21 | [Open](./E-020-development-data-bootstrap-and-azure-dataset-media/README.md) |
 
 ## Status rules
 

@@ -1,10 +1,10 @@
 # F-002 — Authentication
 
 **Status:** Active
-**Implementation status:** Partially implemented
-**Version:** 1.0
+**Implementation status:** Phases 1–3 complete; Phase 4 application code implemented, production email configuration pending
+**Version:** 1.4
 **Owner:** Mathieu Galidie
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-23
 **Dependencies:** F-003, F-004, F-005
 **Related engineering initiatives:** E-004, E-005, E-013, E-017
 
@@ -18,7 +18,7 @@ Users need a predictable way to return to their personalized Appetee experience 
 
 ## Current Behavior
 
-Implementation baseline reviewed from frontend `main` and backend `master` on 2026-08-06.
+Implementation baseline reviewed from the frontend implementation and documented backend contract on 2026-08-23.
 
 ### Implemented
 
@@ -32,17 +32,30 @@ Implementation baseline reviewed from frontend `main` and backend `master` on 20
 - `guestGuard` sends authenticated users to `/home`.
 - Successful login navigates to `/home`.
 - Logout is available from the authenticated header and returns to `/auth/login`.
-- The backend cookie is HttpOnly, Secure, uses `SameSite=None`, and has sliding expiration enabled by configuration.
+- Login provides Show/Hide Password, Remember Me, Forgot Password, and the corrected `/auth/sign-up/account` entry.
+- Invalid credentials use `Invalid email or password.` across the API-to-UI path.
+- The frontend sends the explicit `rememberMe` choice and prevents duplicate submissions while a request is pending.
+- Non-remembered login uses a browser-session cookie; remembered login uses a seven-day persistent cookie.
+- Cookie tickets renew on activity while preserving a server-validated 30-day absolute reauthentication limit.
+- Expired sessions return the stable `session_expired` outcome, clear user-scoped frontend state, redirect to Login, and display the approved message once.
+- Multiple browser sessions are allowed, and logout clears only the current browser cookie.
+- The backend cookie is HttpOnly, Secure, and uses `SameSite=None`.
+- `/auth/forgot-password` provides an enumeration-safe recovery request form and generic sent confirmation.
+- `/auth/reset-password?token=...` provides new-password confirmation, safe token outcomes, and removes the token from the visible URL after success.
+- The frontend calls the documented recovery request and confirmation endpoints without storing credentials or tokens in browser storage.
+- An expired authentication cookie clears stale identity state without replacing an opened password-recovery URL.
+- `POST /api/auth/password-recovery/request` returns one generic `202 Accepted` outcome, applies a hidden per-account issuance cooldown, and sends a one-time link through Azure Communication Services Email.
+- `POST /api/auth/password-recovery/confirm` atomically replaces the password and invalidates every outstanding recovery token for that account.
+- Recovery tokens contain 256 bits of random data, expire after 60 minutes, are stored only as SHA-256 hashes, and can be consumed once even under concurrent requests.
 
 ### Known gaps
 
-- The exact approved invalid-credential message is not yet guaranteed across the complete API-to-UI path.
-- Show/hide password, Remember Me, and Forgot Password are not implemented.
-- The Login page's Create Account link targets `/auth/sign-up` rather than `/auth/sign-up/account`.
-- Current sessions are persistent by default; the approved behavior distinguishes browser-session and remembered sessions.
-- The approved seven-day remembered-session lifetime, absolute reauthentication limit, and session-expired message are not implemented as a complete product flow.
-- Password recovery, password change, and active-session management are not implemented.
+- ACS endpoint, sender, and Key Vault-backed access key still require App Service configuration and a live email-delivery verification; startup fails closed until required delivery settings are valid.
+- Password change and active-session management are not implemented.
 - F-004 must block unverified accounts and redirect valid pending users to `/auth/verify-email`.
+- The backend exposes the verification-required outcome, but persisted verification state and frontend routing remain F-004 work.
+- Rate limiting remains owned by E-004.
+- Server-side revocation plus disabled-account, password-change, and permission-change revalidation remain owned by E-005.
 
 ## Scope
 
@@ -167,7 +180,7 @@ interface LoginRequest {
 }
 ```
 
-The current implementation sends only `email` and `password`; `rememberMe` is added when the approved session behavior is implemented.
+The implemented frontend and backend contract includes all three fields. `rememberMe` is `false` by default.
 
 ### Authenticated session summary
 
@@ -189,11 +202,11 @@ Authentication/session state is global for the current identity and survives rou
 ### Existing tables used
 
 - `users`
-- `password_reset_tokens` for future password-recovery phases
+- `password_reset_tokens` for the implemented Phase 4 backend token lifecycle
 
 ### Schema changes
 
-F-002 does not directly own the final server-side session persistence model. Multiple-device sessions, revocation, absolute lifetime, and session history are implemented under E-005 and consumed by this feature.
+Phase 3 remains cookie-ticket based and requires no schema change. Phase 4 uses the existing `password_reset_tokens` columns for the user association, SHA-256 token hash, expiration, consumption time, and creation time. Server-side revocation, security-version validation, and session history remain E-005 work.
 
 ### Index changes
 
@@ -201,15 +214,16 @@ Current relevant indexes:
 
 ```text
 users.uq_users_email (email)
-password_reset_tokens.idx_prt_user_id (user_id)
+password_reset_tokens.uq_prt_token_hash (token_hash)
+password_reset_tokens.idx_prt_user_created_at (user_id, created_at)
 password_reset_tokens.idx_prt_expires_at (expires_at)
 ```
 
-When password reset is implemented, the token lookup must have a unique or otherwise selective index on the stored token hash. E-008 owns the migration mechanism and E-005/E-004 own the security policy.
+The unique hash index supports bounded confirmation lookup and prevents duplicate stored proofs. The user/creation-time index supports the serialized per-account issuance cooldown. The expiry index supports future bounded cleanup.
 
 ### Data migration
 
-No migration is required for the currently implemented login/session endpoints. Future session persistence and password-reset index changes must use E-008 migrations.
+`migrations/20260823_005_f002_phase4_password_recovery.sql` upgrades the legacy user-only token index to the unique token-hash and user/creation-time indexes. It is forward-only under E-008.
 
 ## API Endpoints
 
@@ -219,8 +233,8 @@ No migration is required for the currently implemented login/session endpoints. 
 | `GET` | `/api/auth/session` | Restore the current cookie-backed session | Implemented |
 | `POST` | `/api/auth/logout` | End the current browser session | Implemented |
 | `GET` | `/api/users/me` | Hydrate the current authenticated user | Implemented |
-| `POST` | `/api/auth/password-recovery/request` | Request password-reset email | Planned |
-| `POST` | `/api/auth/password-recovery/confirm` | Consume reset token and set new password | Planned |
+| `POST` | `/api/auth/password-recovery/request` | Request password-reset email | Implemented; ACS deployment configuration pending |
+| `POST` | `/api/auth/password-recovery/confirm` | Consume reset token and set new password | Implemented |
 | `PUT` | `/api/users/me/password` | Change password while authenticated | Planned |
 
 Active-session listing/revocation endpoints are deferred until that phase is specified with E-005.
@@ -242,6 +256,35 @@ Active-session listing/revocation endpoints are deferred until that phase is spe
 ### `POST /api/auth/logout`
 
 No product payload is required.
+
+### `POST /api/auth/password-recovery/request`
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+The response does not reveal whether the email belongs to an account. Syntactically valid known, unknown, and per-account-cooldown requests return `202 Accepted` with:
+
+```json
+{
+  "message": "If an eligible account matches that email, recovery instructions will be sent."
+}
+```
+
+The response means the request was processed; it does not assert that an account exists or that transport succeeded.
+
+### `POST /api/auth/password-recovery/confirm`
+
+```json
+{
+  "token": "single-use-token-from-recovery-link",
+  "newPassword": "replacement-password"
+}
+```
+
+Password confirmation is frontend-only form state and is not sent to the API. The implemented replacement-password boundary is 8–128 characters. Token validity remains server-authoritative.
 
 ## Response Contracts
 
@@ -272,12 +315,25 @@ The common error-envelope shape is owned by E-010. F-002 only requires a stable 
 
 `204 No Content`.
 
+### Password recovery request
+
+The API returns `202 Accepted` and the generic response above. The frontend presents `If an account exists for that email, we sent password reset instructions.` without inspecting account state.
+
+### Password recovery confirmation
+
+A successful confirmation returns `204 No Content`. The frontend removes the token query parameter and directs the user to Login.
+
 ## Error Behavior
 
 - Invalid credentials: `401` with the user-facing meaning `Invalid email or password.`
 - Pending verified-required account: no session is created; return the stable verification-required outcome.
 - Rate-limited login: `429` with retry information under E-004.
-- Expired/missing restored session: `401`; frontend clears user-scoped state.
+- Expired or rejected restored session: `401` with `code: "session_expired"`; frontend clears user-scoped state and displays `Your session expired. Please log in again.` once.
+- Missing restored session: `401`; frontend clears user-scoped state without presenting an expiration message.
+- Invalid, expired, or used recovery token: `400` with `code: "password_recovery_token_invalid"`; frontend displays `This password reset link is invalid or has expired. Request a new link.` without exposing token state details.
+- Repeated issuance inside the 60-second per-account cooldown returns the same generic `202` and does not create or send another token. E-004 still owns request/IP abuse controls and any public `429` behavior.
+- Recovery transport failure removes the undelivered token, records no secret in logs, and keeps the request response generic so account existence is not disclosed. The user can retry.
+- Recovery email links target the environment-specific frontend route `/auth/reset-password`; the public URL may live in environment configuration, while the ACS access key must remain in Key Vault and must not be committed.
 - Logout failure must not prevent local state cleanup.
 - Validation and error-envelope formatting are governed by E-010.
 
@@ -311,7 +367,7 @@ The common error-envelope shape is owned by E-010. F-002 only requires a stable 
 
 ### Phase 2 — Login experience completion
 
-**Status:** Not started
+**Status:** Completed
 
 #### User value delivered
 
@@ -326,19 +382,19 @@ The common error-envelope shape is owned by E-010. F-002 only requires a stable 
 
 #### Tests and validation
 
-- [ ] Component tests for password visibility, pending submission, validation, and links.
-- [ ] Integration test for generic invalid credentials.
-- [ ] Accessibility validation for labels, focus, status messages, and keyboard submission.
+- [x] Component tests cover password visibility, pending submission, validation, and links.
+- [x] Backend integration tests cover generic invalid credentials and the stable verification-required outcome.
+- [x] Automated accessibility coverage verifies labels, focus, status messages, toggle semantics, and keyboard submission.
 
 #### Phase completion criteria
 
-- [ ] All approved Login interactions work.
-- [ ] Invalid credentials use the approved generic message.
-- [ ] Create Account opens `/auth/sign-up/account`.
+- [x] All approved Login interactions work.
+- [x] Invalid credentials use the approved generic message.
+- [x] Create Account opens `/auth/sign-up/account`.
 
 ### Phase 3 — Remembered sessions and expiration experience
 
-**Status:** Not started
+**Status:** Completed
 
 #### User value delivered
 
@@ -353,19 +409,19 @@ The common error-envelope shape is owned by E-010. F-002 only requires a stable 
 
 #### Tests and validation
 
-- [ ] Integration tests for remembered and non-remembered cookie attributes.
-- [ ] Idle, sliding, and absolute-expiration tests.
-- [ ] Frontend expired-session redirect/message tests.
-- [ ] Multi-browser behavior validation.
+- [x] Integration tests cover remembered and non-remembered cookie attributes.
+- [x] Deterministic tests cover idle, sliding, and absolute expiration.
+- [x] Frontend unit and browser tests cover expired-session reset, redirect, and one-time messaging.
+- [x] Multi-browser behavior validates independent sessions and current-browser-only logout.
 
 #### Phase completion criteria
 
-- [ ] Session behavior matches the approved policy.
-- [ ] Expired sessions clear scoped state and return to Login.
+- [x] Session behavior matches the approved policy.
+- [x] Expired sessions clear scoped state and return to Login.
 
 ### Phase 4 — Password recovery
 
-**Status:** Not started
+**Status:** In progress — frontend and backend code implemented; production ACS Email validation pending
 
 #### User value delivered
 
@@ -380,13 +436,16 @@ The common error-envelope shape is owned by E-010. F-002 only requires a stable 
 
 #### Tests and validation
 
-- [ ] Valid, expired, used, invalid, and throttled token tests.
-- [ ] Generic response and enumeration-resistance tests.
-- [ ] End-to-end recovery flow.
+- [x] Frontend tests cover missing, expired, used, invalid, and throttled token outcomes.
+- [x] Frontend component and browser tests cover the generic response and enumeration-resistant presentation.
+- [x] A mocked browser test covers the complete frontend request/reset journey.
+- [x] Backend tests cover valid, expired, used, unknown, repeated, and concurrently consumed tokens.
+- [x] Backend tests cover generic known/unknown outcomes, issuance cooldown, password replacement, migration indexes, and email-delivery cleanup.
+- [ ] Configure production ACS Email settings through App Service and Key Vault, then verify a live delivered link end to end.
 
 #### Phase completion criteria
 
-- [ ] Recovery is safe, usable, and fully tested.
+- [ ] Recovery is safe, usable, and fully tested in the deployed environment.
 
 ### Phase 5 — Password change
 
@@ -446,36 +505,37 @@ The common error-envelope shape is owned by E-010. F-002 only requires a stable 
 - Authenticated and guest route guards.
 - Current-user hydration.
 - Header logout and Login redirect.
+- Phase 2 Login experience and aligned `rememberMe` contract.
+- Phase 3 remembered/browser-session policy and expiration experience.
+- Phase 4 frontend and backend application implementation, including token lifecycle and automated integration coverage.
 
 ### In progress
 
-- None.
+- Phase 4 production ACS Email configuration and live delivered-link verification.
 
 ### Remaining
 
-- [ ] Phase 2 — Login experience completion.
-- [ ] Phase 3 — Remembered sessions and expiration experience.
-- [ ] Phase 4 — Password recovery.
+- [ ] Phase 4 — Configure production ACS Email and complete live end-to-end verification.
 - [ ] Phase 5 — Password change.
 - [ ] Phase 6 — Active-session management.
 - [ ] F-004 integration for unverified users.
 
 ## Acceptance Criteria
 
-- [ ] **AC-001:** A verified user can log in with email and password and reaches `/home`.
-- [ ] **AC-002:** Invalid credentials display `Invalid email or password.`
+- [x] **AC-001:** A verified user can log in with email and password and reaches `/home`.
+- [x] **AC-002:** Invalid credentials display `Invalid email or password.`
 - [ ] **AC-003:** A valid unverified user is redirected to `/auth/verify-email` without receiving a session.
-- [ ] **AC-004:** Guests cannot access protected routes.
-- [ ] **AC-005:** Authenticated users cannot remain on guest-only routes.
-- [ ] **AC-006:** Remember Me follows the approved browser-session and seven-day behavior.
-- [ ] **AC-007:** Expired sessions return to Login with the approved message.
-- [ ] **AC-008:** Logout from the header clears the current session and returns to `/auth/login`.
+- [x] **AC-004:** Guests cannot access protected routes.
+- [x] **AC-005:** Authenticated users cannot remain on guest-only routes.
+- [x] **AC-006:** Remember Me follows the approved browser-session and seven-day behavior.
+- [x] **AC-007:** Expired sessions return to Login with the approved message.
+- [x] **AC-008:** Logout from the header clears the current session and returns to `/auth/login`.
 
 ## Risks and Open Questions
 
 - Password-change session revocation behavior must be finalized before Phase 5 implementation.
 - Exact active-session device metadata must be minimized before Phase 6.
-- Email-delivery implementation for password recovery will share infrastructure concerns with F-004 but remains a separate product flow.
+- `PasswordRecovery__ResetPageUrl` may override the public frontend URL for deployment slots or custom domains. `CommunicationEmail__Endpoint` and `CommunicationEmail__FromAddress` are ordinary App Service settings; `CommunicationEmail__AccessKey` is a Key Vault reference and is never committed. F-004 may reuse the transport without reusing F-002 tokens or lifecycle rules.
 
 ## Decisions
 

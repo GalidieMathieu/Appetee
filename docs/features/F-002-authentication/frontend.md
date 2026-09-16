@@ -1,10 +1,10 @@
 # F-002 — Authentication: Frontend Design
 
 **Status:** Active
-**Implementation status:** Partially implemented
-**Version:** 1.0
+**Implementation status:** Phases 1–4 implemented
+**Version:** 1.2
 **Owner:** Mathieu Galidie
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-23
 **Dependencies:** F-003, F-004, F-008
 **Related engineering initiatives:** E-004, E-005, E-013, E-017
 
@@ -26,21 +26,32 @@ This document defines frontend boundaries for Login, authenticated state, sessio
 - `authGuard` redirects guests to `/auth/login`.
 - `guestGuard` redirects authenticated users to `/home`.
 - `LoginPage` uses a reactive email/password form and redirects success to `/home`.
+- Login includes accessible Show/Hide Password, Remember Me, Forgot Password, and `/auth/sign-up/account` actions.
+- Login sends the explicit `rememberMe` value, prevents duplicate pending submissions, supports Enter submission, and focuses validation/error feedback.
+- Invalid credentials always display `Invalid email or password.`; throttled login displays the approved retry-later message.
+- `SessionExpirationService` clears principal-scoped state, redirects once, and exposes the approved expiration message once.
+- The API interceptor treats protected-resource `401` responses as ended sessions while leaving expected auth-endpoint failures to `AuthFacade`.
+- Startup session restoration preserves the backend `session_expired` reason through the Login redirect.
 - The private header invokes logout and routes to `/auth/login`.
+- `ForgotPasswordPage` submits an email-only recovery request and always presents a generic success confirmation.
+- `ResetPasswordPage` reads the link token without browser storage, validates password confirmation, submits only the token and new password, and clears the token URL after success.
+- Recovery requests bypass global session-expiration handling so expected guest-flow failures cannot create a false expired-session redirect.
+- Startup restoration clears an expired authentication cookie without discarding an opened recovery route or its reset token.
 
 ### Known gaps
 
-- Show/hide password, Remember Me, and Forgot Password are absent.
-- Create Account links to `/auth/sign-up` rather than `/auth/sign-up/account`.
-- Session-expired reason/message is not preserved through redirect.
 - Pending-unverified login routing is not implemented.
-- Password recovery, password change, and session management pages are absent.
+- Password recovery depends on the planned server endpoints, email delivery, and token lifecycle.
+- Password change and session management pages are absent.
 
 ## Routes and Entry Points
 
 | Route | Access | Purpose |
 |---|---|---|
 | `/auth/login` | Guest | Login form. |
+| `/auth/sign-up/account` | Guest | Correct account-onboarding entry. |
+| `/auth/forgot-password` | Guest | Request password-reset instructions. |
+| `/auth/reset-password?token=...` | Guest with recovery link | Confirm a new password using the server-issued token. |
 | `/auth/verify-email` | Pending user/guest | F-004 verification-pending experience. |
 | Protected routes | Authenticated user | Guarded application routes. |
 | `/profile` or future profile route | Authenticated user | Entry point for password change and active-session management. |
@@ -51,6 +62,10 @@ This document defines frontend boundaries for Login, authenticated state, sessio
 - `AuthFacade`: coordinates API requests and current-user hydration.
 - `AuthStore`: session summary, load/error state, authenticated signal.
 - `SessionService`: clears principal-scoped stores.
+- `SessionExpirationService`: deduplicates expiration handling, clears scoped state, redirects, and supplies one-time Login feedback.
+- `ForgotPasswordPage`: recovery request, generic sent confirmation, retry, and validation states.
+- `ResetPasswordPage`: missing/invalid token, new-password confirmation, pending, failure, and success states.
+- `PasswordRecoveryApi`: typed request and confirmation calls that opt out of authenticated-session expiration handling.
 - `authGuard` / `guestGuard`: route boundaries.
 - Future recovery/change/session pages should live under the authentication feature while Profile may link to them.
 
@@ -115,33 +130,33 @@ This document defines frontend boundaries for Login, authenticated state, sessio
 
 ### Phase 2 — Login experience completion
 
-**Status:** Not started
+**Status:** Completed
 
-- Changes: Add show/hide password, Remember Me, Forgot Password, generic error contract, corrected Sign Up route, Enter submission, and autocomplete attributes.
-- Unit or component tests: All interactions, disabled state, messages, and links.
-- Browser E2E tests: Successful, invalid, throttled, and pending-verification outcomes.
-- Accessibility validation: Focus, announcements, toggle semantics, and keyboard flow.
-- Responsive and visual validation: Mobile and desktop.
+- Changes: Show/hide password, Remember Me, Forgot Password entry, generic error contract, corrected Sign Up route, Enter submission, and autocomplete attributes are implemented.
+- Unit or component tests: Password visibility, validation focus, pending state, messages, request payload, and links are covered.
+- Browser E2E tests: Successful/user-isolated login, Remember Me payload, and generic invalid-credential behavior are covered. Pending-verification routing remains F-004.
+- Accessibility validation: Labels, focus, alert announcement, toggle semantics, busy state, and keyboard flow have automated coverage.
+- Responsive and visual validation: Narrow layout behavior is implemented; no separate manual visual sign-off is recorded.
 
 ### Phase 3 — Remembered sessions and expiration experience
 
-**Status:** Not started
+**Status:** Completed
 
-- Changes: Send Remember Me intent, distinguish session outcomes, retain one-time expiration reason, and handle revoked/expired sessions consistently.
-- Unit or component tests: Interceptor/facade state reset and expiration message.
-- Browser E2E tests: Refresh, browser reopen where testable, expiration, and multi-user state isolation.
-- Accessibility validation: Expiration announcement and focus after redirect.
-- Responsive and visual validation: Login expired-session state.
+- Changes: Remember Me intent, protected-request/session-restore outcomes, one-time expiration reason, and consistent scoped-state reset are implemented.
+- Unit or component tests: API payload, interceptor behavior, facade restoration, expiration deduplication, and Login message/focus are covered.
+- Browser E2E tests: Expiration during protected use, expiration during startup restoration, logout, and multi-user state isolation are covered. Cookie persistence itself is verified by backend integration tests.
+- Accessibility validation: The expiration alert is announced and focused after redirect.
+- Responsive and visual validation: The Login expiration state uses the responsive Login error presentation.
 
 ### Phase 4 — Password recovery
 
-**Status:** Not started
+**Status:** Frontend completed
 
-- Changes: Recovery request, sent confirmation, token result, and reset-password pages.
-- Unit or component tests: Generic request result and token outcomes.
-- Browser E2E tests: Complete reset journey.
-- Accessibility validation: Form, focus, and status messages.
-- Responsive and visual validation: All recovery states.
+- Changes: Recovery request, generic sent confirmation, missing/token-error outcomes, and reset-password pages are implemented.
+- Unit or component tests: API payload boundaries, generic request result, invalid/expired/used/throttled outcomes, validation, duplicate-submit prevention, and success are covered.
+- Browser E2E tests: The complete frontend request/reset journey and stale-auth-cookie recovery-link preservation are covered with mocked API responses; live backend/email integration remains pending.
+- Accessibility validation: Labels, autocomplete, keyboard submission, busy state, alert/status announcements, password visibility semantics, and focus management are covered.
+- Responsive and visual validation: Request, sent, token-error, reset, and success states share a narrow-screen responsive layout; no separate manual visual sign-off is recorded.
 
 ### Phase 5 — Password change
 
@@ -166,15 +181,23 @@ This document defines frontend boundaries for Login, authenticated state, sessio
 ## Validation Commands
 
 ```text
-npm test
+npm run test -- --watch=false
 npm run build
+npx --no-install tsc --noEmit -p tsconfig.app.json
+npx --no-install tsc --noEmit -p tsconfig.spec.json
+npm run e2e -- e2e/account-authorization.spec.ts
+npm run e2e -- e2e/password-recovery.spec.ts
 ```
+
+Last verified on 2026-08-23: production build passed; both TypeScript checks passed; 94 unit/component tests passed with one unrelated skipped test; and all six browser tests passed. The build retains one pre-existing admin-recipes stylesheet budget warning.
 
 ## Frontend Decisions
 
 - Authenticated state is not inferred solely from a cookie; it is restored and validated through the backend session/current-user flow.
 - All principal-scoped stores must reset on logout, expiration, or identity change.
 - F-004 owns verification-page UI; F-002 owns routing to it from Login.
+- Recovery tokens remain transient route input; the frontend does not place them or passwords in browser storage.
+- Password confirmation is a UI safeguard only. The backend remains authoritative for password policy and token state.
 
 ## Open Questions
 

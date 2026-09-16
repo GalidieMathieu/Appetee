@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="920" viewBox="0 0 1400 920" role="img" aria-labelledby="title desc">
+  <title id="title">F-006 Home Page routing</title>
+  <desc id="desc">Routing from authenticated Home search, Discover, recipe cards, Meal Plan actions, Favorites, and Explore All Recipes.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#6b7280"/>
+    </marker>
+    <style>
+      .title { font: 700 28px Arial, sans-serif; fill: #111827; }
+      .subtitle { font: 400 15px Arial, sans-serif; fill: #6b7280; }
+      .box-title { font: 700 18px Arial, sans-serif; fill: #111827; }
+      .box-sub { font: 400 14px Arial, sans-serif; fill: #4b5563; }
+      .route { font: 700 14px monospace; fill: #ea580c; }
+      .note { font: 400 13px Arial, sans-serif; fill: #6b7280; }
+      .box { fill: #ffffff; stroke: #d1d5db; stroke-width: 1.5; rx: 14; }
+      .home { fill: #fff7ed; stroke: #fb923c; stroke-width: 2; rx: 16; }
+      .future { fill: #f9fafb; stroke: #9ca3af; stroke-width: 1.5; stroke-dasharray: 7 6; rx: 14; }
+      .flow { fill: none; stroke: #6b7280; stroke-width: 1.8; marker-end: url(#arrow); }
+      .flow-dashed { fill: none; stroke: #9ca3af; stroke-width: 1.6; stroke-dasharray: 7 6; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1400" height="920" fill="#ffffff"/>
+  <text x="60" y="58" class="title">F-006 — Home Page routing</text>
+  <text x="60" y="86" class="subtitle">Authenticated route and navigation destinations. Dashed targets are future dependency routes and remain disabled until implemented.</text>
+
+  <rect x="520" y="120" width="360" height="110" class="home"/>
+  <text x="700" y="157" text-anchor="middle" class="box-title">Authenticated Home</text>
+  <text x="700" y="184" text-anchor="middle" class="route">/home</text>
+  <text x="700" y="208" text-anchor="middle" class="box-sub">Private application layout</text>
+
+  <!-- Search -->
+  <rect x="70" y="310" width="300" height="120" class="box"/>
+  <text x="220" y="344" text-anchor="middle" class="box-title">Recipe Search Bar</text>
+  <text x="220" y="371" text-anchor="middle" class="box-sub">Search / Enter</text>
+  <text x="220" y="397" text-anchor="middle" class="route">/recipes?search={query}</text>
+  <path d="M600 230 C520 270, 410 300, 365 335" class="flow"/>
+
+  <!-- Discover -->
+  <rect x="400" y="310" width="300" height="120" class="box"/>
+  <text x="550" y="344" text-anchor="middle" class="box-title">Discover — View all</text>
+  <text x="550" y="373" text-anchor="middle" class="route">/recipes</text>
+  <text x="550" y="399" text-anchor="middle" class="box-sub">Starts/uses Recipes discovery</text>
+  <path d="M660 230 L575 310" class="flow"/>
+
+  <!-- Recipe card flow -->
+  <rect x="730" y="310" width="300" height="120" class="box"/>
+  <text x="880" y="344" text-anchor="middle" class="box-title">Any Recipe Card</text>
+  <text x="880" y="371" text-anchor="middle" class="box-sub">Shared Recipe Experience</text>
+  <text x="880" y="397" text-anchor="middle" class="box-sub">opens Quick Preview (no route change)</text>
+  <path d="M740 230 L840 310" class="flow"/>
+
+  <!-- Explore -->
+  <rect x="1060" y="310" width="270" height="120" class="box"/>
+  <text x="1195" y="344" text-anchor="middle" class="box-title">Explore All Recipes</text>
+  <text x="1195" y="373" text-anchor="middle" class="route">/recipes</text>
+  <text x="1195" y="399" text-anchor="middle" class="box-sub">Final Home CTA</text>
+  <path d="M800 230 C950 260, 1080 285, 1135 310" class="flow"/>
+
+  <!-- Quick preview -> cooking -->
+  <rect x="730" y="520" width="300" height="105" class="future"/>
+  <text x="880" y="552" text-anchor="middle" class="box-title">Cooking Mode</text>
+  <text x="880" y="580" text-anchor="middle" class="box-sub">Start Cooking from Quick Preview</text>
+  <text x="880" y="603" text-anchor="middle" class="note">route owned by future Cooking feature</text>
+  <path d="M880 430 L880 520" class="flow-dashed"/>
+
+  <!-- Meal Plan -->
+  <rect x="185" y="575" width="340" height="125" class="future"/>
+  <text x="355" y="610" text-anchor="middle" class="box-title">Meal Plan</text>
+  <text x="355" y="638" text-anchor="middle" class="route">/meal-plan</text>
+  <text x="355" y="664" text-anchor="middle" class="box-sub">Upcoming View all / Start Meal Planning</text>
+  <text x="355" y="687" text-anchor="middle" class="note">disabled until route exists</text>
+  <path d="M650 230 C500 330, 390 460, 360 575" class="flow-dashed"/>
+
+  <!-- Favorites -->
+  <rect x="1070" y="575" width="270" height="125" class="future"/>
+  <text x="1205" y="610" text-anchor="middle" class="box-title">Favorites</text>
+  <text x="1205" y="638" text-anchor="middle" class="route">/favorites</text>
+  <text x="1205" y="664" text-anchor="middle" class="box-sub">Favorite Recipes — View all</text>
+  <text x="1205" y="687" text-anchor="middle" class="note">disabled until route exists</text>
+  <path d="M760 230 C950 345, 1130 470, 1195 575" class="flow-dashed"/>
+
+  <rect x="120" y="790" width="1160" height="74" rx="12" fill="#f9fafb" stroke="#e5e7eb"/>
+  <text x="700" y="821" text-anchor="middle" class="box-sub">Normal feature pages render RecipeCard only. RecipeCard → shared Quick Preview is UI orchestration, not Home routing.</text>
+  <text x="700" y="848" text-anchor="middle" class="box-sub">Unavailable future destinations remain visibly disabled; do not route users to missing pages.</text>
+</svg>
