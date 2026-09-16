@@ -2,11 +2,11 @@
 
 ## Initiative Information
 
-- **Status:** In progress — Phases 1–2 complete
+- **Status:** In progress — Phases 1–3 complete; Phase 4 backend/frontend implemented, integrated staging verification pending
 - **Type:** Engineering initiative
 - **Priority:** Critical
 - **Implementation order:** 1
-- **Last updated:** 2026-08-07
+- **Last updated:** 2026-09-16
 
 ## Goal
 
@@ -159,25 +159,96 @@ Phases are completed in order unless a documented dependency requires otherwise.
 
 ### Phase 4 — Complete account closure behavior
 
-**Status:** Not started
+**Status:** In progress — backend/frontend implemented 2026-09-11; integrated staging verification pending
 
 #### Changes
 
 - Define relational, session, media, log, and backup handling.
 - Revoke sessions and coordinate durable cleanup.
 - Document retained/anonymized data.
+- Add a claim-scoped frontend closure flow using only `DELETE /api/users/me`.
+- Require an explicit destructive-action confirmation and keep failed requests retryable.
+- Clear all browser identity state and show a one-time completion notice only after confirmed success.
 
 #### Tests and validation
 
-- [ ] Deletion integration tests including session invalidation and relational cleanup.
-- [ ] Fault tests for partial cleanup and retry/reconciliation behavior.
+- [x] Deletion integration tests including session invalidation and relational cleanup.
+- [x] Fault tests for partial cleanup and retry/reconciliation behavior.
+- [x] Frontend unit tests for the ID-free API contract, success-only session reset, confirmation, retry, and completion notice.
+- [x] Browser E2E for a failed deletion attempt followed by successful retry and client-session cleanup.
 
 #### Phase completion rule
 
-- [ ] All scoped changes are implemented or explicitly documented as not applicable.
-- [ ] Every required automated test passes.
-- [ ] Required manual, staging, migration, or operational evidence is attached.
-- [ ] The initiative `Work Status` section is updated with verified evidence.
+- [x] All scoped changes are implemented or explicitly documented as not applicable.
+- [x] Every required automated test passes.
+- [x] Required migration and local operational evidence is attached.
+- [ ] Integrated frontend/backend staging closure flow passes.
+- [x] The initiative `Work Status` section is updated with verified backend and frontend evidence.
+
+#### Frontend closure contract implemented
+
+| Concern | Frontend behavior |
+|---|---|
+| Identity | Calls `DELETE /api/users/me`; no route, query, or request-body account/owner ID is accepted or sent. |
+| Confirmation | Requires the signed-in user to type `DELETE` exactly before enabling permanent deletion. |
+| Pending state | Disables competing profile changes, confirmation cancellation, and duplicate deletion submissions while the request is active. |
+| Failed/ambiguous response | For non-authentication failures, keeps the browser state and confirmation visible, presents a safe error, and allows retry. A `401` follows the existing global session-expiration flow. The frontend does not claim that deletion completed. |
+| Confirmed success | Resets every store registered in `SESSION_RESETTERS`, ends logout-sensitive streams, clears stale expiration feedback, replaces the protected route with `/auth/login`, and announces closure once. |
+| Authorization | Treats the UI confirmation as a usability safeguard only. Ownership and authorization remain server responsibilities derived from the validated principal. |
+
+The frontend deliberately uses non-specific deletion wording. The backend contract below defines the
+verified relational, session, media, log, backup, and retry guarantees behind a successful response.
+
+#### Frontend implementation record — 2026-09-16
+
+This frontend version completed the browser-owned portion of Phase 4 without adding or accepting a
+client-selected account identifier:
+
+- `src/app/core/shared/data-access/user/user_auth.api.ts` adds the bodyless, claim-scoped
+  `DELETE /api/users/me` request.
+- `src/app/core/shared/data-access/user/user.facade.ts` exposes `deleteMe$()`, maps safe errors, and
+  finalizes local account closure only after the delete request succeeds.
+- `src/app/core/auth/account-closure.service.ts` resets every registered identity-scoped store,
+  clears stale session-expiration state, notifies logout-sensitive streams, and holds the one-time
+  successful-closure notice.
+- `src/app/features/profile/profile.page.*` adds the danger zone, exact `DELETE` confirmation,
+  cancellation, duplicate-submission protection, pending state, safe retry feedback, and successful
+  redirect to `/auth/login` with protected-route history replacement.
+- `src/app/features/auth/login/login.page.*` consumes and announces the successful-closure notice
+  once after redirect.
+- Unit coverage was added to the user API, user facade, account-closure service, profile page, and
+  login page. It verifies that no account ID or request body is sent, local identity is cleared only
+  after success, failures remain retryable, confirmation is exact, and the completion notice is
+  consumed once.
+- `e2e/account-authorization.spec.ts` now exercises a failed deletion followed by a successful retry,
+  verifies both requests target only `/api/users/me` with no body, confirms the failed attempt does
+  not navigate or report success, and confirms the successful attempt clears the browser session.
+- No backend source, migration, database, media-cleanup, or server-session code was changed by this
+  frontend version.
+
+Verification recorded for this version:
+
+- `npx --no-install tsc --noEmit -p tsconfig.app.json` passed.
+- `npx --no-install tsc --noEmit -p tsconfig.spec.json` passed.
+- Targeted Angular tests passed 29/29 across five files.
+- The full Angular suite passed 321/321 executed tests across 53 files; one pre-existing sign-up test
+  remained explicitly skipped.
+- `npm run e2e -- e2e/account-authorization.spec.ts` passed 5/5 Chromium scenarios.
+- `npm run build` passed. Existing style-budget warnings in Cooking Mode, Admin Recipes, and Recipes
+  List remained unrelated to this work.
+
+#### Backend closure contract implemented
+
+| Concern | Backend behavior |
+|---|---|
+| Identity and response | Authenticated `DELETE /api/users/me` derives the account ID only from the validated principal. A committed closure returns `204` and clears the current cookie; a missing/deleted principal receives `401 ProblemDetails`. |
+| Relational data | One MySQL transaction locks the current account, writes a durable cleanup job, and deletes the account. Existing foreign keys cascade password-recovery tokens, diets, ingredient restrictions, favorites, collections, and collection entries. A failed transaction commits neither deletion nor cleanup work. |
+| Other sessions | Cookie validation verifies that the claimed account still exists. Cookies held by other browsers are rejected and cleared on their next request after deletion. General session-version and disabled-account controls remain owned by E-005. |
+| Profile media | Only HTTPS Blob URLs in the configured container and the exact `users/{formerUserId}/` namespace are eligible for deletion. External URLs, recipe media, and another account's Blob namespace are never deleted. Blob deletion uses `DeleteIfExists` and is replay-safe. |
+| Partial failure | Relational deletion remains committed when Blob Storage is unavailable. The pending cleanup job records a bounded error type and retry time, and a bounded background reconciliation worker retries it. |
+| Retained cleanup data | While pending, the job temporarily retains the former numeric user ID and profile URL needed to prove media ownership. Completion clears both fields and any error code, retaining only non-identifying operational status, attempt count, and timestamps. |
+| Logs | Closure/retry logs contain only the cleanup job ID and bounded exception type. They do not contain user ID, username, email, profile URL, cookie, or token. Existing platform-log retention remains governed by E-016. |
+| Backups | Live relational rows and managed media are deleted as above. Existing encrypted backups are not rewritten and retain historical bytes until their configured expiration. An older recovery point must not serve traffic until it is advanced/reconciled through the closure point; retention periods and restore governance remain owned by E-012/E-016. |
 
 ## Work Status
 
@@ -210,15 +281,41 @@ Phases are completed in order unless a documented dependency requires otherwise.
 
 ### In Progress
 
-None.
+- Phase 4 — Complete account closure behavior
+  - Implemented an accessible profile danger zone with exact `DELETE` confirmation, pending-state protection, cancellation before submission, and retryable error feedback.
+  - Added an ID-free `DELETE /api/users/me` data-access operation. No account or owner identifier is accepted by the API method, facade, component, or browser request.
+  - Non-authentication failures preserve local authentication and profile state; the UI does not claim success and permits the same confirmation to be retried. A `401` continues through the global session-expiration behavior.
+  - A confirmed success resets every registered identity-scoped store, notifies logout-sensitive streams, clears stale session-expiration feedback, and replaces browser history with the login route.
+  - The login page consumes and announces a one-time account-closure success notice.
+  - Added unit coverage for the HTTP contract, success-only local cleanup, safe failure handling, exact confirmation, navigation, and one-time notice consumption.
+  - Added Chromium coverage that returns a cleanup failure once, verifies no navigation or false success, retries the same claim-scoped request, and verifies successful sign-out feedback.
+  - Validation evidence (2026-09-11): `npx --no-install tsc --noEmit -p tsconfig.app.json` and `npx --no-install tsc --noEmit -p tsconfig.spec.json` passed.
+  - Validation evidence (2026-09-11): targeted Angular tests passed 29/29 across 5 files.
+  - Validation evidence (2026-09-11): full `npm run test -- --watch=false` passed 321/321 executed tests across 53 files; one pre-existing sign-up test remains explicitly skipped.
+  - Validation evidence (2026-09-11): `npm run e2e -- e2e/account-authorization.spec.ts` passed 5/5 Chromium scenarios, including the Phase 4 failure/retry path.
+  - Validation evidence (2026-09-11): `npm run build` passed. Existing component-style budget warnings remain in Cooking Mode, Admin Recipes, and Recipes List styles and are unrelated to this phase.
+  - Backend added authenticated `DELETE /api/users/me`; no request or route account ID is accepted.
+  - Account deletion and cleanup-job creation commit in one MySQL transaction; all current user-owned foreign-key rows cascade.
+  - Every authenticated cookie now verifies that its account still exists, invalidating other-browser cookies on their next request after closure.
+  - Profile media deletion is restricted to the exact `users/{formerUserId}/` namespace in the configured Blob container.
+  - A privacy-minimized durable outbox and bounded background worker retry partial Blob failures; successful jobs scrub the former user ID, profile URL, and error code.
+  - Migration evidence (2026-09-11): `20260911_007_e001_phase4_account_closure.sql` was applied from the integration harness and its columns/index/privacy shape passed.
+  - Validation evidence (2026-09-11): targeted Phase 4 and Blob ownership tests passed 10/10.
+  - Validation evidence (2026-09-11): full backend suite passed 322/322 with 0 failures and 0 skips.
+  - Dataset/schema evidence (2026-09-11): generation completed, tooling tests passed 48/48, and validation passed for 121 ingredients and 1,699 recipes with 0 errors (existing advisory warnings remain).
+  - Integrated frontend/backend staging verification remains pending because no staging environment was provided for this backend-only task.
 
 ### Remaining
 
-- [ ] All consumer account operations are claim-scoped.
+- [x] All consumer account operations are claim-scoped.
 - [x] The general user list is absent from the consumer API.
 - [x] Cross-account and anonymous requests are denied without distinguishable personal-data leakage.
 - [x] Frontend code no longer supplies an account owner ID for self-service operations.
-- [ ] Deletion semantics and tests cover database, session, media, logs, and retained backups.
+- [x] Deletion semantics and tests cover database, session, media, logs, and retained backups.
+- [ ] Integrated frontend/backend staging closure flow passes.
+- [x] Backend provides `DELETE /api/users/me` and returns success only after its documented durable-closure boundary is satisfied.
+- [x] Backend/operations define and verify relational deletion, server-session revocation, media cleanup, retained/anonymized logs, backups, and retry/reconciliation behavior.
+- [ ] Run the frontend flow against the integrated backend in staging after the closure contract is available.
 
 ## Risks and Edge Cases
 
@@ -246,17 +343,19 @@ None.
 
 ## Completion Criteria
 
-- [ ] All consumer account operations are claim-scoped.
-- [ ] The general user list is absent from the consumer API.
-- [ ] Cross-account and anonymous requests are denied without distinguishable personal-data leakage.
+- [x] All consumer account operations are claim-scoped.
+- [x] The general user list is absent from the consumer API.
+- [x] Cross-account and anonymous requests are denied without distinguishable personal-data leakage.
 - [x] Frontend code no longer supplies an account owner ID for self-service operations.
-- [ ] Deletion semantics and tests cover database, session, media, logs, and retained backups.
+- [x] Deletion semantics and tests cover database, session, media, logs, and retained backups.
 
 ## Decisions
 
 - Current-user identity is derived only from the validated principal.
 - Consumer account operations use `/me` semantics.
 - Administrative user search is a separate permissioned capability, not a parameter added to consumer routes.
+- Account closure commits relational deletion and durable cleanup intent atomically; external cleanup is idempotent and retryable.
+- Cleanup may delete only media in the closing account's server-derived Blob namespace.
 
 ## Detailed Implementation Documents
 

@@ -1,11 +1,12 @@
 # F-006 — Home Page
 
-**Status:** Planned  
-**Implementation status:** Not started  
+**Status:** Frontend implemented and backend dependencies validated; manual browser/session validation pending<br>
+**Implementation status:** Frontend phases 1–3 implemented; frontend and relevant backend automated checks passing<br>
+**Backend status:** Complete — F-006 owns no backend code and all current owning-backend dependencies are validated<br>
 **Version:** 1.1  
 **Owner:** Mathieu Galidie  
-**Last updated:** 2026-08-29  
-**Dependencies:** F-008 — Recipe Discovery, Recipe Card, and Quick Preview; Recipe Favorites feature (ID pending); Manual Meal Planning feature (ID pending)  
+**Last updated:** 2026-08-30<br>
+**Dependencies:** F-008 — Recipe Discovery, Recipe Card, and Quick Preview; F-009 — Favorites; Manual Meal Planning feature (ID pending)<br>
 **Related engineering initiatives:** E-013, E-017, E-019
 
 ## Goal
@@ -853,7 +854,7 @@ Only three implementation phases are defined. They are intentionally detailed so
 
 ### Phase 1 — Shared recipe UI primitives and Home structural foundation
 
-**Status:** Not started
+**Status:** Frontend implementation complete; manual validation pending
 
 #### User value delivered
 
@@ -862,66 +863,66 @@ Only three implementation phases are defined. They are intentionally detailed so
 
 #### Implementation tasks
 
-- [ ] Inspect the **latest frontend `development` branch** before changing code, especially the current Recipes page/search implementation after any F-008 work.
-- [ ] Identify the exact current Recipes search markup, TypeScript behavior, SCSS, shared button/text classes, Material icon usage, responsive breakpoints, and URL/search initialization behavior.
-- [ ] Create a reusable `RecipeSearchBarComponent` under `src/app/core/shared/ui/recipe-search-bar/` (or the closest current shared UI convention if the repository has been reorganized by F-008).
-- [ ] Extract/refactor the current Recipes search input + Search button into `RecipeSearchBarComponent`; do not visually redesign it.
-- [ ] Preserve current Recipes search behavior after extraction: Enter submission, Search button submission, search icon if present, input styling, focus behavior, and responsive width.
-- [ ] Keep Recipes-only Filters/advanced-filter controls outside `RecipeSearchBarComponent`.
-- [ ] Replace the Recipes page's duplicated inline search form with the new shared component so Home and Recipes prove they use one implementation.
-- [ ] Ensure the shared search component accepts/displays an initial/current search value so `/recipes?search=rice%20chicken` can render `rice chicken` in the field.
-- [ ] Ensure the shared search component emits the trimmed submitted string and performs no HTTP/router work itself.
-- [ ] Ensure the shared search component expands to the width supplied by its parent and does not hard-code a desktop width.
-- [ ] Create `RecipeListSectionComponent` under `src/app/core/shared/ui/recipe-list-section/` using the contract in this README/frontend.md.
-- [ ] Implement title + right-aligned `View all` action + horizontal Recipe Card row as one reusable presentation.
-- [ ] Render only the canonical F-008 `RecipeCardComponent` inside RecipeListSection; do not import Quick Preview from the section.
-- [ ] Implement responsive horizontal overflow without shrinking or forking the canonical Recipe Card.
-- [ ] Add section-level skeleton/loading structure consistent with the final card footprint; reuse existing shared skeleton patterns if available.
-- [ ] Keep route destinations outside RecipeListSection; expose an action output rather than hard-coding `/recipes`, `/favorites`, or `/meal-plan`.
-- [ ] Remove/avoid any `HomeRecipeCard`, `FavoriteRecipeCard`, or Upcoming-specific card duplication.
-- [ ] Build/rework `HomePage` shell at `/home` with approved welcome copy and shared RecipeSearchBar.
-- [ ] Implement Home search submission: non-empty query → Angular Router navigation to `/recipes` with `search` query param.
-- [ ] Ensure whitespace-only search does nothing.
-- [ ] Add the Discover RecipeListSection shell.
-- [ ] Add the no-meal-plan CTA matching `assets/home-reference-meal-plan-empty-state.png`; because Meal Planning is not implemented, keep its route action disabled until the route exists.
-- [ ] Add the final Explore All Recipes CTA matching `assets/home-reference-explore-all-recipes.png`, routing to `/recipes`.
-- [ ] Use `assets/home-reference-recipe-list-section.png` only for section layout/header/action direction; do not recreate stale card internals from the screenshot.
-- [ ] Reuse `_button.scss`, `_text.scss`, `_theme.scss`, existing CSS variables, and existing layout spacing conventions before introducing any new style token.
-- [ ] Do not copy Tailwind/shadcn/Builder implementation code.
-- [ ] Confirm `assets/home-routing.svg` matches the implemented route behavior and keep unavailable routes clearly treated as disabled/planned.
+- [ ] Inspect the **latest frontend `development` branch** before changing code, especially the current Recipes page/search implementation after any F-008 work. Current working-tree contracts were inspected; no remote branch refresh was performed.
+- [x] Identify the exact current Recipes search markup, TypeScript behavior, SCSS, shared button/text classes, Material icon usage, responsive breakpoints, and URL/search initialization behavior.
+- [x] Create a reusable `RecipeSearchBarComponent` under `src/app/core/shared/ui/recipe-search-bar/` (or the closest current shared UI convention if the repository has been reorganized by F-008).
+- [x] Extract/refactor the current Recipes search input + Search button into `RecipeSearchBarComponent`; do not visually redesign it.
+- [x] Preserve current Recipes search behavior after extraction: Enter submission, Search button submission, search icon if present, input styling, focus behavior, and responsive width.
+- [x] Keep Recipes-only Filters/advanced-filter controls outside `RecipeSearchBarComponent`.
+- [x] Replace the Recipes page's duplicated inline search form with the new shared component so Home and Recipes prove they use one implementation.
+- [x] Ensure the shared search component accepts/displays an initial/current search value so `/recipes?search=rice%20chicken` can render `rice chicken` in the field.
+- [x] Ensure the shared search component emits the trimmed submitted string and performs no HTTP/router work itself.
+- [x] Ensure the shared search component expands to the width supplied by its parent and does not hard-code a desktop width.
+- [x] Create `RecipeListSectionComponent` under `src/app/core/shared/ui/recipe-list-section/` using the contract in this README/frontend.md.
+- [x] Implement title + right-aligned `View all` action + horizontal Recipe Card row as one reusable presentation.
+- [x] Render only the canonical F-008 `RecipeCardComponent` inside RecipeListSection; do not import Quick Preview from the section.
+- [x] Implement responsive horizontal overflow without shrinking or forking the canonical Recipe Card.
+- [x] Add section-level skeleton/loading structure consistent with the final card footprint; reuse existing shared skeleton patterns if available.
+- [x] Keep route destinations outside RecipeListSection; expose an action output rather than hard-coding `/recipes`, `/favorites`, or `/meal-plan`.
+- [x] Remove/avoid any `HomeRecipeCard`, `FavoriteRecipeCard`, or Upcoming-specific card duplication.
+- [x] Build/rework `HomePage` shell at `/home` with approved welcome copy and shared RecipeSearchBar.
+- [x] Implement Home search submission: non-empty query → Angular Router navigation to `/recipes` with `search` query param.
+- [x] Ensure whitespace-only search does nothing.
+- [x] Add the Discover RecipeListSection shell.
+- [x] Add the no-meal-plan CTA matching `assets/home-reference-meal-plan-empty-state.png`; because Meal Planning is not implemented, keep its route action disabled until the route exists.
+- [x] Add the final Explore All Recipes CTA matching `assets/home-reference-explore-all-recipes.png`, routing to `/recipes`.
+- [x] Use `assets/home-reference-recipe-list-section.png` only for section layout/header/action direction; do not recreate stale card internals from the screenshot.
+- [x] Reuse `_button.scss`, `_text.scss`, `_theme.scss`, existing CSS variables, and existing layout spacing conventions before introducing any new style token.
+- [x] Do not copy Tailwind/shadcn/Builder implementation code.
+- [x] Confirm `assets/home-routing.svg` matches the implemented route behavior and keep unavailable routes clearly treated as disabled/planned.
 
 #### Tests and validation
 
-- [ ] Unit/component test: RecipeSearchBar emits on Enter.
-- [ ] Unit/component test: RecipeSearchBar emits on Search button click.
-- [ ] Unit/component test: RecipeSearchBar trims submitted values.
-- [ ] Unit/component test: whitespace-only value does not trigger Home navigation.
-- [ ] Unit/component test: RecipeSearchBar reflects provided initial/current value.
-- [ ] Recipes regression test: `/recipes` still uses the same search behavior after extraction.
-- [ ] Recipes regression test: Recipes filters remain feature-owned and are not accidentally moved into the shared search component.
-- [ ] RecipeListSection test: renders supplied title and Recipe Cards.
-- [ ] RecipeListSection test: action emits once and respects disabled state.
-- [ ] RecipeListSection test: does not directly instantiate/import Quick Preview behavior.
-- [ ] Home routing test: `rice chicken` submission navigates to `/recipes?search=rice%20chicken` through Angular query params.
-- [ ] Home routing test: Discover `View all` targets `/recipes`.
-- [ ] Home routing test: Explore All Recipes targets `/recipes`.
-- [ ] Home test: unavailable Meal Plan action is disabled and does not route.
+- [x] Unit/component test: RecipeSearchBar emits on Enter.
+- [x] Unit/component test: RecipeSearchBar emits on Search button click.
+- [x] Unit/component test: RecipeSearchBar trims submitted values.
+- [x] Unit/component test: whitespace-only value does not trigger Home navigation.
+- [x] Unit/component test: RecipeSearchBar reflects provided initial/current value.
+- [x] Recipes regression test: `/recipes` still uses the same search behavior after extraction.
+- [x] Recipes regression test: Recipes filters remain feature-owned and are not accidentally moved into the shared search component.
+- [x] RecipeListSection test: renders supplied title and Recipe Cards.
+- [x] RecipeListSection test: action emits once and respects disabled state.
+- [x] RecipeListSection test: does not directly instantiate/import Quick Preview behavior.
+- [x] Home routing test: `rice chicken` submission navigates to `/recipes?search=rice%20chicken` through Angular query params.
+- [x] Home routing test: Discover `View all` targets `/recipes`.
+- [x] Home routing test: Explore All Recipes targets `/recipes`.
+- [x] Home test: unavailable Meal Plan action is disabled and does not route.
 - [ ] Validate desktop, tablet, and mobile search layout against the current Recipes search implementation.
 - [ ] Validate horizontal RecipeListSection overflow does not create page-level horizontal scrolling.
-- [ ] Run frontend unit tests, type checking, linting if configured, and production build.
+- [x] Run frontend unit tests, type checking, linting if configured, and production build.
 
 #### Phase completion criteria
 
-- [ ] Home and Recipes use the same RecipeSearchBar implementation.
-- [ ] Discover/Upcoming/Favorites have one reusable RecipeListSection implementation available.
-- [ ] Home shell matches the approved structural/visual references.
-- [ ] No duplicate Recipe Card or Quick Preview architecture is created.
-- [ ] Known Home routes/actions behave according to the routing asset.
-- [ ] Frontend build/tests pass.
+- [x] Home and Recipes use the same RecipeSearchBar implementation.
+- [x] Discover/Upcoming/Favorites have one reusable RecipeListSection implementation available.
+- [x] Home shell matches the approved structural/visual references.
+- [x] No duplicate Recipe Card or Quick Preview architecture is created.
+- [x] Known Home routes/actions behave according to the routing asset.
+- [x] Frontend build/tests pass.
 
 ### Phase 2 — Live Discover and Favorites composition
 
-**Status:** Not started
+**Status:** Frontend implementation and backend dependency validation complete; manual session validation pending
 
 #### User value delivered
 
@@ -929,72 +930,72 @@ Only three implementation phases are defined. They are intentionally detailed so
 
 #### Preconditions
 
-- [ ] F-008 discovery/card/preview/favorite architecture required by this phase is implemented or the current branch exposes equivalent final contracts.
-- [ ] Recipe Favorites list endpoint `GET /api/recipes/favorites?limit=4` is available before enabling the real Favorites preview. If it is not yet implemented, do not invent an F-006-only endpoint; complete the one-phase Recipe Favorites feature first or leave Favorites absent.
+- [x] F-008 discovery/card/preview/favorite architecture required by this phase is implemented or the current branch exposes equivalent final contracts.
+- [x] Recipe Favorites list endpoint `GET /api/recipes/favorites?limit=4` is available before enabling the real Favorites preview. If it is not yet implemented, do not invent an F-006-only endpoint; complete the one-phase Recipe Favorites feature first or leave Favorites absent.
 
 #### Implementation tasks
 
-- [ ] Inspect E-019/current state patterns and use signals/current project conventions; do not reintroduce the old whole-catalog `RecipesFacade` pattern.
-- [ ] Add a lightweight Home state/facade responsible only for Home composition/query state.
-- [ ] Keep Discover and Favorites request states independent.
-- [ ] Do not put full recipe details/instructions in Home state.
-- [ ] Do not reuse `/recipes` RecipeDiscoveryStore as Home's query store if doing so would overwrite/contaminate the Recipes route's discovery session.
-- [ ] Reuse the shared recipe HTTP/data-access API for the bounded Discover query rather than creating a Home-specific HTTP client.
-- [ ] Load Discover with `GET /api/recipes?limit=5` using F-008's normal compatible browse semantics.
-- [ ] Ignore Discover `nextCursor/hasMore` on Home; Home shows only the first five returned items.
-- [ ] Store/reuse the five Discover cards for the current authenticated SPA session so Home → another route → Home does not reshuffle automatically.
-- [ ] Allow a full browser refresh or account/session reset to load a fresh cursorless Discover set.
-- [ ] Remove any old Home recommendation endpoint/query/exclusion logic; F-006 must not call `/api/recipes/recommended`.
-- [ ] Do not wait for Favorites or Meal Plan before loading Discover.
-- [ ] Wire the real Discover items into `RecipeListSectionComponent`.
-- [ ] Verify every Discover card is only `<app-recipe-card [recipe]="...">` and therefore automatically uses shared Quick Preview/favorite/Cooking flow.
-- [ ] Load Favorites preview from `GET /api/recipes/favorites?limit=4` when the Favorites dependency is available.
-- [ ] Use the shared F-008 `RecipeCardDto`; do not create a Home favorites DTO with duplicate recipe fields.
-- [ ] On successful Favorites response with one or more items, render `Your Favorite Recipes` with RecipeListSection.
-- [ ] On successful Favorites response with zero items, render no Favorites section at all.
-- [ ] Do not interpret a Favorites error as an empty result.
-- [ ] Implement independent Favorite loading/error/retry behavior without blocking Discover/search/Explore actions.
-- [ ] Reuse the shared F-008 favorite mutation synchronization path; Home must not duplicate PUT/DELETE calls.
-- [ ] When a displayed favorite is successfully unsaved, remove/update it in Home preview according to shared optimistic/revert semantics.
-- [ ] If the final favorite is removed, remove the Favorite Recipes section.
-- [ ] When a recipe is newly saved from Discover and shared favorite state exposes the mutation, update the Home favorite preview consistently (newest-first intent, maximum four) without creating a second favorite source of truth.
-- [ ] Wire Favorite `View all` to `/favorites` only when the Favorites route exists; otherwise keep the action visible but disabled.
-- [ ] Keep Discover `View all` active to `/recipes` regardless of Favorites state.
-- [ ] Ensure loading image behavior continues to follow F-008 Recipe Card image policies.
-- [ ] Ensure Home uses card data only; Preview data remains lazy through Recipe Experience.
+- [x] Inspect E-019/current state patterns and use signals/current project conventions; do not reintroduce the old whole-catalog `RecipesFacade` pattern.
+- [x] Add a lightweight Home state/facade responsible only for Home composition/query state.
+- [x] Keep Discover and Favorites request states independent.
+- [x] Do not put full recipe details/instructions in Home state.
+- [x] Do not reuse `/recipes` RecipeDiscoveryStore as Home's query store if doing so would overwrite/contaminate the Recipes route's discovery session.
+- [x] Reuse the shared recipe HTTP/data-access API for the bounded Discover query rather than creating a Home-specific HTTP client.
+- [x] Load Discover with `GET /api/recipes?limit=5` using F-008's normal compatible browse semantics.
+- [x] Ignore Discover `nextCursor/hasMore` on Home; Home shows only the first five returned items.
+- [x] Store/reuse the five Discover cards for the current authenticated SPA session so Home → another route → Home does not reshuffle automatically.
+- [x] Allow a full browser refresh or account/session reset to load a fresh cursorless Discover set.
+- [x] Remove any old Home recommendation endpoint/query/exclusion logic; F-006 must not call `/api/recipes/recommended`.
+- [x] Do not wait for Favorites or Meal Plan before loading Discover.
+- [x] Wire the real Discover items into `RecipeListSectionComponent`.
+- [x] Verify every Discover card is only `<app-recipe-card [recipe]="...">` and therefore automatically uses shared Quick Preview/favorite/Cooking flow.
+- [x] Load Favorites preview from `GET /api/recipes/favorites?limit=4` when the Favorites dependency is available.
+- [x] Use the shared F-008 `RecipeCardDto`; do not create a Home favorites DTO with duplicate recipe fields.
+- [x] On successful Favorites response with one or more items, render `Your Favorite Recipes` with RecipeListSection.
+- [x] On successful Favorites response with zero items, render no Favorites section at all.
+- [x] Do not interpret a Favorites error as an empty result.
+- [x] Implement independent Favorite loading/error/retry behavior without blocking Discover/search/Explore actions.
+- [x] Reuse the shared F-008 favorite mutation synchronization path; Home must not duplicate PUT/DELETE calls.
+- [x] When a displayed favorite is successfully unsaved, remove/update it in Home preview according to shared optimistic/revert semantics.
+- [x] If the final favorite is removed, remove the Favorite Recipes section.
+- [x] When a recipe is newly saved from Discover and shared favorite state exposes the mutation, update the Home favorite preview consistently (newest-first intent, maximum four) without creating a second favorite source of truth.
+- [x] Wire Favorite `View all` to `/favorites` only when the Favorites route exists; otherwise keep the action visible but disabled.
+- [x] Keep Discover `View all` active to `/recipes` regardless of Favorites state.
+- [x] Ensure loading image behavior continues to follow F-008 Recipe Card image policies.
+- [x] Ensure Home uses card data only; Preview data remains lazy through Recipe Experience.
 
 #### Tests and validation
 
-- [ ] Home service/facade test: Discover requests `limit=5` without a cursor.
-- [ ] Home state test: valid Discover cards are reused on Home re-entry in the same authenticated session.
-- [ ] Home state test: logout/identity reset clears Discover/Favorites state.
-- [ ] Home test: Discover renders returned RecipeCardDto items through RecipeListSection.
-- [ ] Home test: Discover request failure does not block search, Explore CTA, or Favorites.
-- [ ] Home test: Favorites success with >0 renders the section.
-- [ ] Home test: Favorites success with 0 renders no section.
-- [ ] Home test: Favorites error is not treated as loaded-empty.
-- [ ] Home test: successful unsave removes/updates the visible favorite preview without duplicating the mutation HTTP call.
-- [ ] Home test: last favorite removal hides the entire Favorites section.
-- [ ] Home test: Favorite View all is disabled when `/favorites` is unavailable and active once the route is registered.
-- [ ] Integration test: clicking a Home Recipe Card opens the shared F-008 Quick Preview, not a Home-specific modal.
-- [ ] Integration test: heart click performs shared favorite behavior and does not open Quick Preview.
-- [ ] Integration test: Quick Preview cache/data behavior is identical whether the card originated on Home or Recipes.
+- [x] Home service/facade test: Discover requests `limit=5` without a cursor.
+- [x] Home state test: valid Discover cards are reused on Home re-entry in the same authenticated session.
+- [x] Home state test: logout/identity reset clears Discover/Favorites state.
+- [x] Home test: Discover renders returned RecipeCardDto items through RecipeListSection.
+- [x] Home test: Discover request failure does not block search, Explore CTA, or Favorites.
+- [x] Home test: Favorites success with >0 renders the section.
+- [x] Home test: Favorites success with 0 renders no section.
+- [x] Home test: Favorites error is not treated as loaded-empty.
+- [x] Home test: successful unsave removes/updates the visible favorite preview without duplicating the mutation HTTP call.
+- [x] Home test: last favorite removal hides the entire Favorites section.
+- [x] Home test: Favorite View all is disabled when `/favorites` is unavailable and active once the route is registered.
+- [x] Integration test: clicking a Home Recipe Card opens the shared F-008 Quick Preview, not a Home-specific modal.
+- [x] Integration test: heart click performs shared favorite behavior and does not open Quick Preview.
+- [x] Integration test: Quick Preview cache/data behavior is identical whether the card originated on Home or Recipes.
 - [ ] Session test: expired authentication receives normal application 401/redirect/message behavior.
 - [ ] Multi-browser/manual validation: Home account-scoped data does not leak between different authenticated sessions.
-- [ ] Run frontend/backend relevant automated tests and production frontend build.
+- [x] Run frontend/backend relevant automated tests and production frontend build.
 
 #### Phase completion criteria
 
-- [ ] Home renders real Discover recipes using F-008.
-- [ ] Home renders Favorites only when favorites exist.
-- [ ] No recommendation logic/endpoint was introduced.
-- [ ] Home and Recipes share Recipe Card/Quick Preview/favorite behavior.
-- [ ] Home route reuse does not reshuffle Discover on every navigation.
-- [ ] Independent section loading/error behavior works.
+- [x] Home renders real Discover recipes using F-008.
+- [x] Home renders Favorites only when favorites exist.
+- [x] No recommendation logic/endpoint was introduced.
+- [x] Home and Recipes share Recipe Card/Quick Preview/favorite behavior.
+- [x] Home route reuse does not reshuffle Discover on every navigation.
+- [x] Independent section loading/error behavior works.
 
 ### Phase 3 — Routing completion, responsive/accessibility hardening, and dependency-ready Meal Plan presentation
 
-**Status:** Not started
+**Status:** Frontend implementation complete; interactive browser validation pending
 
 #### User value delivered
 
@@ -1003,67 +1004,74 @@ Only three implementation phases are defined. They are intentionally detailed so
 #### Implementation tasks
 
 - [ ] Compare the implemented page against all three provided visual references at desktop width.
-- [ ] Ensure all populated recipe sections use exactly the same RecipeListSectionComponent and shared RecipeCardComponent.
-- [ ] Ensure no Favorite/Discover-specific section markup has drifted into separate copies.
-- [ ] Polish desktop spacing so title, `View all`, and card row alignment follow `home-reference-recipe-list-section.png` while preserving current shared card dimensions/content.
-- [ ] Polish no-meal-plan CTA against `home-reference-meal-plan-empty-state.png` using Appetee tokens/shared buttons instead of screenshot-derived hard-coded styles.
-- [ ] Polish bottom Explore CTA against `home-reference-explore-all-recipes.png`.
+- [x] Ensure all populated recipe sections use exactly the same RecipeListSectionComponent and shared RecipeCardComponent.
+- [x] Ensure no Favorite/Discover-specific section markup has drifted into separate copies.
+- [x] Polish desktop spacing so title, `View all`, and card row alignment follow `home-reference-recipe-list-section.png` while preserving current shared card dimensions/content.
+- [x] Polish no-meal-plan CTA against `home-reference-meal-plan-empty-state.png` using Appetee tokens/shared buttons instead of screenshot-derived hard-coded styles.
+- [x] Polish bottom Explore CTA against `home-reference-explore-all-recipes.png`.
 - [ ] Verify Search, section rows, CTA blocks, and page padding at supported mobile/tablet/desktop widths.
-- [ ] Ensure horizontal rows use contained overflow and do not create page-level overflow.
-- [ ] Ensure keyboard users can tab through `View all`, each card, card heart controls, search controls, and CTA actions in a logical order.
-- [ ] Ensure section headings use correct semantic hierarchy.
-- [ ] Ensure disabled `/meal-plan` and, when applicable, `/favorites` actions cannot navigate and expose disabled semantics to assistive technologies.
-- [ ] Keep `/favorites` as the canonical Favorite View all route; do not restore the obsolete `/recipes/favorites` target.
-- [ ] Keep `/recipes` as both Discover View all and final Explore All Recipes route.
-- [ ] Verify Home search query values are URL encoded by Angular Router and are restored/displayed by Recipes through the shared RecipeSearchBar.
-- [ ] Ensure route transitions do not manually pass RecipeCard/Preview objects through navigation state when not required.
-- [ ] Preserve the no-plan CTA as the current behavior until Manual Meal Planning is implemented; do not fabricate active-plan data.
-- [ ] Document/prepare the future Meal Planning integration point: when the owning feature provides upcoming meal data, map up to four returned `recipe: RecipeCardDto` items into the same RecipeListSection; if `hasActivePlan=false`/no upcoming data according to the final Meal Plan contract, retain the CTA.
-- [ ] Do not implement meal-plan SQL/schema/API inside F-006.
-- [ ] Verify Home state is cleared by the established identity/logout reset path.
-- [ ] Remove old placeholder Home recipe data, obsolete ingredient/pantry CTA code, outdated meal-type filters, and unused Home-only recipe card handlers left from scaffolding.
-- [ ] Remove obsolete F-006 references/implementation code for recommendation exclusion IDs, favorite cursors, and Home-owned recipe preview behavior.
-- [ ] Confirm no new hard-coded Appetee colors/typography/button implementations were introduced.
-- [ ] Confirm all imports resolve through current shared UI/data-access paths after F-008 Recipe Experience refactor.
+- [x] Ensure horizontal rows use contained overflow and do not create page-level overflow.
+- [x] Ensure keyboard users can tab through `View all`, each card, card heart controls, search controls, and CTA actions in a logical order.
+- [x] Ensure section headings use correct semantic hierarchy.
+- [x] Ensure disabled `/meal-plan` and, when applicable, `/favorites` actions cannot navigate and expose disabled semantics to assistive technologies.
+- [x] Keep `/favorites` as the canonical Favorite View all route; do not restore the obsolete `/recipes/favorites` target.
+- [x] Keep `/recipes` as both Discover View all and final Explore All Recipes route.
+- [x] Verify Home search query values are URL encoded by Angular Router and are restored/displayed by Recipes through the shared RecipeSearchBar.
+- [x] Ensure route transitions do not manually pass RecipeCard/Preview objects through navigation state when not required.
+- [x] Preserve the no-plan CTA as the current behavior until Manual Meal Planning is implemented; do not fabricate active-plan data.
+- [x] Document/prepare the future Meal Planning integration point: when the owning feature provides upcoming meal data, map up to four returned `recipe: RecipeCardDto` items into the same RecipeListSection; if `hasActivePlan=false`/no upcoming data according to the final Meal Plan contract, retain the CTA.
+- [x] Do not implement meal-plan SQL/schema/API inside F-006.
+- [x] Verify Home state is cleared by the established identity/logout reset path.
+- [x] Remove old placeholder Home recipe data, obsolete ingredient/pantry CTA code, outdated meal-type filters, and unused Home-only recipe card handlers left from scaffolding.
+- [x] Remove obsolete F-006 references/implementation code for recommendation exclusion IDs, favorite cursors, and Home-owned recipe preview behavior.
+- [x] Confirm no new hard-coded Appetee colors/typography/button implementations were introduced.
+- [x] Confirm all imports resolve through current shared UI/data-access paths after F-008 Recipe Experience refactor.
 
 #### Tests and validation
 
-- [ ] Router test: authenticated `/home` renders through private layout.
-- [ ] Router test: search → `/recipes?search={query}`.
-- [ ] Router test: Discover View all → `/recipes`.
-- [ ] Router test: Explore All Recipes → `/recipes`.
-- [ ] Router test: Favorites View all → `/favorites` when registered.
-- [ ] Router test: missing Favorites route leaves the action disabled/no navigation.
-- [ ] Router test: missing Meal Plan route leaves Start Meal Planning/View all disabled/no navigation.
-- [ ] Accessibility test/manual audit: search form labeling, section headings, action names, disabled semantics, card keyboard behavior, focus visibility.
+- [x] Router test: authenticated `/home` renders through private layout.
+- [x] Router test: search → `/recipes?search={query}`.
+- [x] Router test: Discover View all → `/recipes`.
+- [x] Router test: Explore All Recipes → `/recipes`.
+- [x] Router test: Favorites View all → `/favorites` when registered.
+- [x] Router test: missing Favorites route leaves the action disabled/no navigation.
+- [x] Router test: missing Meal Plan route leaves Start Meal Planning/View all disabled/no navigation.
+- [x] Accessibility test/manual audit: search form labeling, section headings, action names, disabled semantics, card keyboard behavior, focus visibility.
 - [ ] Responsive manual validation: narrow phone, wider phone, tablet, typical laptop, wide desktop.
-- [ ] Verify RecipeListSection behavior with 1, 2, 4, and 5 cards.
-- [ ] Verify long recipe titles remain constrained by the shared Recipe Card rather than changing section height rules.
-- [ ] Verify loading and error states do not cause unrelated sections to disappear.
-- [ ] Verify Favorites loaded-empty creates no empty vertical section gap beyond normal Home spacing.
-- [ ] Verify no-plan CTA is rendered when Meal Planning is unavailable/no plan exists.
-- [ ] Verify Home → Recipes → Home retains Discover set during current SPA session.
+- [x] Verify RecipeListSection behavior with 1, 2, 4, and 5 cards.
+- [x] Verify long recipe titles remain constrained by the shared Recipe Card rather than changing section height rules.
+- [x] Verify loading and error states do not cause unrelated sections to disappear.
+- [x] Verify Favorites loaded-empty creates no empty vertical section gap beyond normal Home spacing.
+- [x] Verify no-plan CTA is rendered when Meal Planning is unavailable/no plan exists.
+- [x] Verify Home → Recipes → Home retains Discover set during current SPA session.
 - [ ] Verify full refresh may load a different Discover set without breaking state.
 - [ ] Verify logout/login as another account clears previous Home data.
 - [ ] Verify remembered and non-remembered session behavior follows existing authentication cookie/session rules; F-006 introduces no alternate auth persistence.
 - [ ] Verify frontend expired-session redirect/message behavior while Home requests are in flight.
 - [ ] Validate supported browser behavior for horizontal rows, search submission, and disabled actions.
-- [ ] Run complete relevant frontend unit/integration suite and production build.
+- [x] Run complete relevant frontend unit/integration suite and production build.
+
+Frontend validation recorded on 2026-08-29: application and test TypeScript checks passed; 50 frontend test files passed with 283 tests passed and 1 skipped; the production frontend build passed with the existing Admin Recipes and Recipes List SCSS budget warnings.
+
+Backend dependency validation recorded on 2026-08-30: the Release backend build passed with zero warnings and errors; 60 relevant authentication, F-008 discovery/favorite, and F-009 Favorites tests passed; `GET /api/recipes?limit=5` and `GET /api/recipes/favorites?limit=4` use the owning authenticated contracts; and no F-006-owned endpoint, SQL, schema, migration, or index was introduced.
 
 #### Phase completion criteria
 
-- [ ] Home matches the approved visual direction using reusable Appetee components/tokens.
-- [ ] Routing matches `assets/home-routing.svg`.
-- [ ] Search bar is one shared implementation across Home and Recipes and remains ready for Meal Plan reuse.
-- [ ] Discover, Upcoming (when available), and Favorites all use one RecipeListSection implementation.
-- [ ] No Home-owned Recipe Card/Quick Preview/favorite mutation/recommendation architecture exists.
+- [x] Home matches the approved visual direction using reusable Appetee components/tokens.
+- [x] Routing matches `assets/home-routing.svg`.
+- [x] Search bar is one shared implementation across Home and Recipes and remains ready for Meal Plan reuse.
+- [x] Discover, Upcoming (when available), and Favorites all use one RecipeListSection implementation.
+- [x] No Home-owned Recipe Card/Quick Preview/favorite mutation/recommendation architecture exists.
 - [ ] All current Home behavior is responsive, accessible, independently failure-tolerant, and tested.
 
 ## Work Status
 
 ### Completed
 
-None for the approved F-006 implementation.
+- [x] Phase 1 frontend implementation and automated validation — Shared recipe UI primitives and Home structural foundation.
+- [x] Phase 2 frontend implementation and automated validation — Live Discover and Favorites composition.
+- [x] Phase 3 frontend implementation and automated validation — Routing, responsive/accessibility hardening, and dependency-ready Meal Plan presentation.
+- [x] Backend dependency validation — F-008 Discover, shared favorite mutations, F-009 Favorites preview, and standard session behavior.
 
 ### In progress
 
@@ -1071,39 +1079,39 @@ None.
 
 ### Remaining
 
-- [ ] Phase 1 — Shared recipe UI primitives and Home structural foundation.
-- [ ] Phase 2 — Live Discover and Favorites composition.
-- [ ] Phase 3 — Routing completion, responsive/accessibility hardening, and dependency-ready Meal Plan presentation.
+- [ ] Manual responsive and supported-browser validation at the documented phone, tablet, laptop, and wide-desktop widths.
+- [ ] Manual authenticated-session validation for refresh, expired requests, remembered/non-remembered sessions, and cross-account isolation.
+- [ ] Deployment-environment verification that the validated Favorites endpoint is available in the target environment.
 - [ ] Future dependency integration — populated Upcoming Meals once Manual Meal Planning exists.
 - [ ] Future separate feature — recommendation/scoring for Discover.
 
 ## Acceptance Criteria
 
-- [ ] **AC-001:** Authenticated users can access `/home` through the private layout.
-- [ ] **AC-002:** Home displays the approved welcome copy with the user's display name.
-- [ ] **AC-003:** Home and Recipes use one shared RecipeSearchBar extracted from the current Recipes search implementation.
-- [ ] **AC-004:** Searching `rice chicken` from Home navigates to `/recipes?search=rice%20chicken` and Recipes shows the same search value.
-- [ ] **AC-005:** Discover shows up to five real F-008 compatible randomized Recipe Cards.
-- [ ] **AC-006:** Discover contains no recommendation scoring/AI/behavioral ranking in F-006.
-- [ ] **AC-007:** Discover, populated Upcoming Meals, and populated Favorites use the same RecipeListSection component.
-- [ ] **AC-008:** All recipe sections render the exact shared F-008 Recipe Card; card selection opens the shared Quick Preview without Home coordinating it.
-- [ ] **AC-009:** Discover `View all` routes to `/recipes`.
-- [ ] **AC-010:** No-plan state uses the approved meal-plan CTA instead of an empty recipe row.
-- [ ] **AC-011:** Meal Plan actions remain disabled until `/meal-plan` exists.
-- [ ] **AC-012:** Favorites section appears only when at least one favorite exists and disappears when loaded favorite count reaches zero.
-- [ ] **AC-013:** Favorite `View all` targets `/favorites` and is disabled until the route exists.
-- [ ] **AC-014:** Bottom Explore All Recipes CTA always renders and routes to `/recipes`.
-- [ ] **AC-015:** Home sections load/fail independently.
-- [ ] **AC-016:** Returning to Home in the same authenticated SPA session does not automatically reshuffle the Discover row.
-- [ ] **AC-017:** F-006 owns no new backend endpoint, schema, or index.
+- [x] **AC-001:** Authenticated users can access `/home` through the private layout.
+- [x] **AC-002:** Home displays the approved welcome copy with the user's display name.
+- [x] **AC-003:** Home and Recipes use one shared RecipeSearchBar extracted from the current Recipes search implementation.
+- [x] **AC-004:** Searching `rice chicken` from Home navigates to `/recipes?search=rice%20chicken` and Recipes shows the same search value.
+- [x] **AC-005:** Discover shows up to five real F-008 compatible randomized Recipe Cards.
+- [x] **AC-006:** Discover contains no recommendation scoring/AI/behavioral ranking in F-006.
+- [x] **AC-007:** Discover, populated Upcoming Meals, and populated Favorites use the same RecipeListSection component.
+- [x] **AC-008:** All recipe sections render the exact shared F-008 Recipe Card; card selection opens the shared Quick Preview without Home coordinating it.
+- [x] **AC-009:** Discover `View all` routes to `/recipes`.
+- [x] **AC-010:** No-plan state uses the approved meal-plan CTA instead of an empty recipe row.
+- [x] **AC-011:** Meal Plan actions remain disabled until `/meal-plan` exists.
+- [x] **AC-012:** Favorites section appears only when at least one favorite exists and disappears when loaded favorite count reaches zero.
+- [x] **AC-013:** Favorite `View all` targets `/favorites` and is disabled until the route exists.
+- [x] **AC-014:** Bottom Explore All Recipes CTA always renders and routes to `/recipes`.
+- [x] **AC-015:** Home sections load/fail independently.
+- [x] **AC-016:** Returning to Home in the same authenticated SPA session does not automatically reshuffle the Discover row.
+- [x] **AC-017:** F-006 owns no new backend endpoint, schema, or index.
 - [ ] **AC-018:** Home is usable and visually consistent on supported mobile/tablet/desktop widths.
-- [ ] **AC-019:** Provided screenshots are used as layout references without copying obsolete card internals or creating duplicate styling systems.
-- [ ] **AC-020:** The implementation passes relevant frontend/backend tests and production frontend build.
+- [x] **AC-019:** Provided screenshots are used as layout references without copying obsolete card internals or creating duplicate styling systems.
+- [x] **AC-020:** The implementation passes relevant frontend/backend tests and production frontend build.
 
 ## Risks and Open Questions
 
 - Manual Meal Planning is not yet implemented. F-006 intentionally ships the approved no-plan CTA until the owning feature supplies active/upcoming data.
-- Recipe Favorites `/favorites` may be implemented after the initial Home UI. Until then, Favorite `View all` remains disabled while the preview may be enabled once the list endpoint exists.
+- The F-009 `/favorites` frontend route and backend endpoint are implemented and validated in their repositories; target-environment deployment availability remains an operational validation item.
 - Future recommendation logic will change Discover selection only; it must preserve the Home section and Recipe Card contracts.
 - If the latest F-008 implementation has reorganized the shared UI/data-access folders, Codex should follow the current repository convention while preserving the ownership boundaries specified here.
 

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="760" viewBox="0 0 1280 760">
+  <defs>
+    <style>
+      .box{fill:#fff;stroke:#222;stroke-width:2}
+      .shared{fill:#f3f4f6}.route{fill:#fff7ed}.state{fill:#f0fdf4}.fallback{fill:#fef2f2}
+      .t{font-family:Arial,sans-serif;font-size:20px;fill:#111}.s{font-family:Arial,sans-serif;font-size:16px;fill:#333}.h{font-family:Arial,sans-serif;font-size:28px;font-weight:700;fill:#111}
+      .a{stroke:#333;stroke-width:2.5;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#333"/></marker>
+  </defs>
+  <text x="640" y="48" text-anchor="middle" class="h">F-010 Cooking Mode routing</text>
+  <rect x="65" y="95" width="235" height="90" rx="14" class="box shared"/><text x="182" y="132" text-anchor="middle" class="t">Origin feature</text><text x="182" y="160" text-anchor="middle" class="s">Home / Recipes / Favorites</text>
+  <rect x="360" y="95" width="220" height="90" rx="14" class="box shared"/><text x="470" y="132" text-anchor="middle" class="t">Recipe Card</text><text x="470" y="160" text-anchor="middle" class="s">shared Recipe Experience</text>
+  <rect x="640" y="95" width="220" height="90" rx="14" class="box shared"/><text x="750" y="132" text-anchor="middle" class="t">Quick Preview</text><text x="750" y="160" text-anchor="middle" class="s">Start Cooking</text>
+  <rect x="920" y="95" width="290" height="90" rx="14" class="box state"/><text x="1065" y="128" text-anchor="middle" class="t">Capture return context</text><text x="1065" y="156" text-anchor="middle" class="s">exact internal URL + scrollY</text>
+  <path d="M300 140 L360 140" class="a"/><path d="M580 140 L640 140" class="a"/><path d="M860 140 L920 140" class="a"/>
+  <rect x="430" y="270" width="420" height="110" rx="14" class="box route"/><text x="640" y="312" text-anchor="middle" class="t">/recipes/:id/cooking</text><text x="640" y="342" text-anchor="middle" class="s">GET /api/recipes/{id}/cooking-view</text>
+  <path d="M1065 185 C1065 230 850 250 800 270" class="a"/>
+  <rect x="125" y="480" width="430" height="120" rx="14" class="box state"/><text x="340" y="518" text-anchor="middle" class="t">Exit with valid origin</text><text x="340" y="548" text-anchor="middle" class="s">return previous app history entry</text><text x="340" y="575" text-anchor="middle" class="s">reuse owning feature state + restore scroll</text>
+  <rect x="725" y="480" width="430" height="120" rx="14" class="box fallback"/><text x="940" y="518" text-anchor="middle" class="t">No valid origin</text><text x="940" y="548" text-anchor="middle" class="s">direct route / unavailable context</text><text x="940" y="575" text-anchor="middle" class="s">fallback → /recipes</text>
+  <path d="M575 380 C500 420 390 440 340 480" class="a"/><path d="M705 380 C780 420 890 440 940 480" class="a"/>
+  <rect x="375" y="655" width="530" height="65" rx="14" class="box shared"/><text x="640" y="682" text-anchor="middle" class="t">No RouteReuseStrategy</text><text x="640" y="707" text-anchor="middle" class="s">route components may destroy; meaningful feature/session stores survive</text>
+</svg>

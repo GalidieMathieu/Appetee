@@ -36,7 +36,7 @@ Phase 1 contains the legacy consumer account surface while claim-scoped write an
 | `DELETE /api/users/{id}` | `401 ProblemDetails` | `404 ProblemDetails` |
 | `GET /api/auth/exists-by-email?email=...` | `200 { "exists": boolean }` | `200 { "exists": boolean }` |
 
-The legacy routes are retained only as OpenAPI-hidden tombstones. They perform no account lookup or mutation. Their authenticated `404` response is identical for the caller's own ID, another user's ID, and an ID that does not exist, so it cannot be used to infer account existence. Phase 4 will add claim-scoped account closure and its cleanup semantics.
+The legacy routes are retained only as OpenAPI-hidden tombstones. They perform no account lookup or mutation. Their authenticated `404` response is identical for the caller's own ID, another user's ID, and an ID that does not exist, so it cannot be used to infer account existence. Phase 4 provides account closure only through the claim-scoped `/me` route.
 
 Authentication middleware returns RFC 7807 responses with `status`, `title`, `detail`, `instance`, and `traceId`. It uses `401` when no valid principal is present and `403` when an authenticated principal fails a separate authorization policy. Account-existence checks do not select between `403` and `404`; the disabled legacy surface always uses the generic `404` contract after authentication.
 
@@ -56,6 +56,24 @@ Authentication middleware returns RFC 7807 responses with `status`, `title`, `de
 The controller extracts `currentUserId` from the validated principal before calling the application service. The service and repository carry that server-derived value separately from the request, and the SQL write is constrained by `WHERE id = @currentUserId`. A principal whose account no longer exists receives `401 ProblemDetails` because the session is stale.
 
 Email availability is a deliberate public sign-up capability at `GET /api/auth/exists-by-email`. It returns only `{ "exists": true|false }`, validates the email syntax, and exposes no user profile or account identifier. The former `/api/users/exists-by-email` route remains disabled so public authentication concerns do not weaken the protected account controller.
+
+## Phase 4 Account Closure Contract
+
+| Request | Anonymous caller | Authenticated caller |
+|---|---:|---:|
+| `DELETE /api/users/me` | `401 ProblemDetails` | `204` after relational deletion and cleanup intent commit; `401 ProblemDetails` for a stale/deleted account |
+
+The controller derives the account ID exclusively from the validated cookie principal and signs out the current browser after the deletion transaction commits. It accepts no body, route account ID, owner ID, media name, or cleanup state from the caller.
+
+The deletion transaction locks the current `users` row, inserts one `account_closure_cleanup` job, and deletes the user. Current foreign keys cascade `password_reset_tokens`, `user_diets`, `user_ingredient_restrictions`, `favorite_recipes`, `favorite_collections`, and their `favorite_collection_recipes`. If any relational step fails, the transaction rolls back both the deletion and cleanup job.
+
+Cookie validation checks that the claim-derived account still exists. Consequently, a cookie in another browser is rejected and cleared on its next request after closure. This is the Phase 4 deleted-account invariant; general revocation/versioning remains in E-005.
+
+Profile-media cleanup is post-commit because MySQL and Blob Storage cannot share a transaction. A URL is eligible only when it is an HTTPS URL in the configured account/container and resolves beneath `users/{formerUserId}/`. External URLs, catalogue media, and another user's namespace are no-ops. `DeleteIfExists` makes replay safe.
+
+The endpoint attempts cleanup immediately. Failure leaves the job pending with a bounded exception type and retry timestamp; a background service processes bounded batches every minute. While pending, the row contains only the former numeric ID and profile URL needed for the ownership check. Completion clears those fields and the error code, retaining non-identifying status, attempt count, and timestamps.
+
+Account-closure logs contain the cleanup job ID and bounded error type only. Existing logs and encrypted backups follow the E-016 retention policy. Backups are not rewritten; an older recovery point cannot serve traffic until recovery has advanced through or reconciled all closures after that point.
 
 ## Database
 
