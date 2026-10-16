@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1255" viewBox="0 0 1500 1255">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#66748a"/></marker></defs>
+<rect width="1500" height="1255" fill="#f5f8fc"/>
+<text x="50" y="61" font-family="DejaVu Sans, sans-serif" font-size="33" font-weight="700" fill="#24334b">08 / Nutrition policy and plan lifecycle</text>
+<text x="50" y="99" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Server-owned calculations; a preview is an ephemeral feature draft result.</text>
+<polyline points="560,275 360,315 360,375" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="265" y="320" width="50" height="19" fill="#f5f8fc"/>
+<text x="270" y="333" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">easy</text>
+<polyline points="940,275 1140,315 1140,375" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1150" y="316" width="119" height="19" fill="#f5f8fc"/>
+<text x="1155" y="333" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">intermediate</text>
+<polyline points="1140,520 1140,650" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="1140,820 1140,970" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1150" y="875" width="152" height="19" fill="#f5f8fc"/>
+<text x="1155" y="892" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">reviewed submit</text>
+<polyline points="845,1050 655,1050" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="680" y="1015" width="69" height="23" fill="#f5f8fc"/>
+<text x="685" y="1032" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">receipt</text>
+<polyline points="360,520 360,970" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="375" y="700" width="201" height="23" fill="#f5f8fc"/>
+<text x="380" y="717" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">Atomic Create; receipt</text>
+<rect x="510" y="145" width="480" height="130" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="530" y="183" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Plan mode</text>
+<text x="530" y="219" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Easy or Intermediate</text>
+<rect x="65" y="375" width="590" height="145" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="85" y="413" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Easy</text>
+<text x="85" y="449" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Name and default count only</text>
+<text x="85" y="478" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No profile inputs or target values</text>
+<rect x="845" y="375" width="590" height="145" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="865" y="413" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Intermediate draft</text>
+<text x="865" y="449" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Profile → Goal → Activity → Meals → Review</text>
+<text x="865" y="478" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Core API sends validated preview request</text>
+<rect x="845" y="650" width="590" height="170" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="865" y="688" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Server policy preview</text>
+<text x="865" y="724" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">ten Haaf RMR + PAL + goal adjustment</text>
+<text x="865" y="753" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Protein, fat range and residual carbs</text>
+<text x="865" y="782" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Targets, warnings, policy version and year</text>
+<rect x="845" y="970" width="590" height="170" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="865" y="1008" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Explicit Create / Recalculate</text>
+<text x="865" y="1044" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Verify reviewed policy/year; recompute</text>
+<text x="865" y="1073" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Profile + plan + first Current are atomic</text>
+<text x="865" y="1102" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Metadata-only edit preserves calculation</text>
+<rect x="65" y="970" width="590" height="170" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="85" y="1008" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Confirmed core state</text>
+<text x="85" y="1044" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Complete plan + settings; profile if changed</text>
+<text x="85" y="1073" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Saved inputs/targets remain authoritative</text>
+<text x="85" y="1102" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Global profile edits do not recalculate plans</text>
+<text x="50" y="1215" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="400" fill="#24334b">Nutrition_Policy.md defines the exact equation, supported inputs, rounding, safeguards and golden vectors.</text>
+</svg>

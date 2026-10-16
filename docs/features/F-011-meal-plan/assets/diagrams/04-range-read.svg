@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1325" viewBox="0 0 1500 1325">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#66748a"/></marker></defs>
+<rect width="1500" height="1325" fill="#f5f8fc"/>
+<text x="50" y="61" font-family="DejaVu Sans, sans-serif" font-size="33" font-weight="700" fill="#24334b">04 / Planner range read</text>
+<text x="50" y="99" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Only a validated, current response can become a confirmed core snapshot.</text>
+<polyline points="750,285 750,350" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="750,520 750,595" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="750,735 750,810" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="570,980 365,1020 365,1070" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="245" y="1014" width="119" height="19" fill="#f5f8fc"/>
+<text x="250" y="1031" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">invalid token</text>
+<polyline points="930,980 1135,1020 1135,1070" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1155" y="1014" width="104" height="19" fill="#f5f8fc"/>
+<text x="1160" y="1031" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">valid token</text>
+<rect x="470" y="145" width="560" height="140" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="490" y="183" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Feature route intent</text>
+<text x="490" y="219" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Parse local date and task selection</text>
+<text x="490" y="248" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Ask core facade for Monday–Sunday</text>
+<rect x="470" y="350" width="560" height="170" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="490" y="388" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Core read preparation</text>
+<text x="490" y="424" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Wait until write lane is idle</text>
+<text x="490" y="453" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Coalesce same key; capture generation,</text>
+<text x="490" y="482" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">sequence, epoch and freshness token</text>
+<rect x="470" y="595" width="560" height="140" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="490" y="633" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">API snapshot read</text>
+<text x="490" y="669" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Coherent settings + seven dates</text>
+<text x="490" y="698" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">GET creates no rows</text>
+<rect x="470" y="810" width="560" height="170" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="490" y="848" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Core response gate</text>
+<text x="490" y="884" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Reject old identity / epoch / sequence</text>
+<text x="490" y="913" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Observe revision; unknown jump makes</text>
+<text x="490" y="942" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">other older projections stale</text>
+<rect x="65" y="1070" width="600" height="140" rx="13" fill="#fff3db" stroke="#b98728" stroke-width="2"/>
+<text x="85" y="1108" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Discard / refresh</text>
+<text x="85" y="1144" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Obsolete completion changes no state</text>
+<text x="85" y="1173" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Keep stale views disabled for writing</text>
+<rect x="835" y="1070" width="600" height="140" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="855" y="1108" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Accept complete snapshot</text>
+<text x="855" y="1144" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Store once; expose readonly selectors</text>
+<text x="855" y="1173" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Feature VM derives presentation only</text>
+<text x="50" y="1285" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="400" fill="#24334b">A newer revision from another read must never authorize mutations from an older, unrefreshed view.</text>
+</svg>

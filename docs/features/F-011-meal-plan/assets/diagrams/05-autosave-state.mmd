@@ -1,0 +1,13 @@
+stateDiagram-v2
+  [*] --> Draft
+  Draft --> Queued: valid intent
+  Queued --> Saving: trusted context and idle lane
+  Saving --> Saved: acknowledged latest draft
+  Saving --> Queued: newer unsent value remains
+  Saving --> Failed: confirmed rejection
+  Saving --> Conflict: stale revision
+  Saving --> UnknownOutcome: possible commit
+  Failed --> Draft: user edits
+  Conflict --> Review: refresh
+  UnknownOutcome --> Review: reconcile GET
+  Review --> Draft: explicit new intent

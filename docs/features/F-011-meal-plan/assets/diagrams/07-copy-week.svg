@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1440" viewBox="0 0 1500 1440">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#66748a"/></marker></defs>
+<rect width="1500" height="1440" fill="#f5f8fc"/>
+<text x="50" y="61" font-family="DejaVu Sans, sans-serif" font-size="33" font-weight="700" fill="#24334b">07 / Atomic Copy Week</text>
+<text x="50" y="99" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">One reviewed seven-day replacement, one server transaction, one confirmed receipt.</text>
+<polyline points="750,305 750,385" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="750,545 750,625" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="560,775 365,835 365,925" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="205" y="848" width="64" height="19" fill="#f5f8fc"/>
+<text x="210" y="865" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">failure</text>
+<polyline points="940,775 1135,835 1135,925" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1145" y="848" width="113" height="19" fill="#f5f8fc"/>
+<text x="1150" y="865" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">valid source</text>
+<polyline points="1135,1070 1135,1180" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="480" y="145" width="540" height="160" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="500" y="183" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Feature copy review</text>
+<text x="500" y="219" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Load source and destination through core</text>
+<text x="500" y="248" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Show replacement impact and dates</text>
+<text x="500" y="277" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Retain reviewed revision in copy intent</text>
+<rect x="480" y="385" width="540" height="160" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="500" y="423" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Backend transaction</text>
+<text x="500" y="459" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Lock owner; compare expected revision</text>
+<text x="500" y="488" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Validate Monday ranges and confirmation</text>
+<text x="500" y="517" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Read full source before any deletion</text>
+<rect x="480" y="625" width="540" height="150" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="500" y="663" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Validate entire source</text>
+<text x="500" y="699" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Reject unavailable recipes before copy</text>
+<text x="500" y="728" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Prepare all seven source-day meanings</text>
+<rect x="55" y="925" width="620" height="145" rx="13" fill="#fff3db" stroke="#b98728" stroke-width="2"/>
+<text x="75" y="963" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Any failure</text>
+<text x="75" y="999" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Rollback every destination change</text>
+<text x="75" y="1028" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No revision increment or partial receipt</text>
+<rect x="825" y="925" width="620" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="845" y="963" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">All seven succeed</text>
+<text x="845" y="999" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Replace destinations; fresh descendant IDs</text>
+<text x="845" y="1028" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">One revision increment + readback + commit</text>
+<rect x="825" y="1180" width="620" height="145" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="845" y="1218" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Core adopts confirmed result</text>
+<text x="845" y="1254" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Apply receipt and invalidate affected ranges</text>
+<text x="845" y="1283" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Feature exits review after acknowledgement</text>
+<text x="50" y="1400" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="400" fill="#24334b">The browser must never implement Copy Week as seven independent Copy Day requests.</text>
+</svg>

@@ -1,0 +1,8 @@
+flowchart TD
+  UI["Feature UI / page.ts"] --> Draft["Feature state / models / forms"]
+  Draft --> Facade["Core domain facades"]
+  Facade --> Confirmed["Core confirmed stores and sync"]
+  Confirmed --> Draft
+  Draft --> UI
+  Draft --> Picker["Core scoped picker query state"]
+  Picker --> Draft

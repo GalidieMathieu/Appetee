@@ -1,0 +1,8 @@
+flowchart TD
+  UI["Pages and components"] --> Draft["Feature flow and drafts"]
+  Draft --> Core["Core facade and coordinator"]
+  Core --> API["API and Application"]
+  API --> DB["Atomic Infrastructure operation"]
+  DB --> Sync["Core sync and confirmed stores"]
+  Sync --> Draft
+  Draft --> UI

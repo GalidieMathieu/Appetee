@@ -1,0 +1,9 @@
+erDiagram
+  users ||--o| meal_plan_settings : settings
+  users ||--o{ nutrition_plans : owns
+  nutrition_plans |o--o| meal_plan_settings : Current
+  users ||--o{ meal_plan_days : owns
+  meal_plan_days ||--o{ meal_plan_meals : contains
+  meal_plan_meals ||--o{ meal_plan_items : contains
+  recipes |o--o{ meal_plan_items : Recipe_only
+  meal_plan_items ||--o| meal_plan_manual_items : Manual_only

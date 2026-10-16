@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1230" viewBox="0 0 1500 1230">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#66748a"/></marker></defs>
+<rect width="1500" height="1230" fill="#f5f8fc"/>
+<text x="50" y="61" font-family="DejaVu Sans, sans-serif" font-size="33" font-weight="700" fill="#24334b">05 / Autosave and mutation recovery</text>
+<text x="50" y="99" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Confirmed data stays in core. Editable values remain separate until acknowledged.</text>
+<polyline points="750,280 750,350" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="575,520 370,585 370,665" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="589" width="77" height="15" fill="#f5f8fc"/>
+<text x="225" y="602" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">success</text>
+<polyline points="930,520 1130,585 1130,665" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1140" y="585" width="64" height="19" fill="#f5f8fc"/>
+<text x="1145" y="602" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">failure</text>
+<polyline points="370,825 370,975" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="1130,825 1130,975" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="480" y="140" width="540" height="140" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="500" y="178" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Feature draft changed</text>
+<text x="500" y="214" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Validate; debounce name or queue value</text>
+<text x="500" y="243" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Do not mutate confirmed entity</text>
+<rect x="480" y="350" width="540" height="170" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="500" y="388" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Core FIFO coordinator</text>
+<text x="500" y="424" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Check originating snapshot revision</text>
+<text x="500" y="453" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Coalesce unsent same-resource scalars</text>
+<text x="500" y="482" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">One request in flight per identity</text>
+<rect x="55" y="665" width="630" height="160" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="75" y="703" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Confirmed acknowledgement</text>
+<text x="75" y="739" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Core sync applies receipt once</text>
+<text x="75" y="768" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Clear only the acknowledged draft version</text>
+<text x="75" y="797" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Next trusted queued intent may proceed</text>
+<rect x="815" y="665" width="630" height="160" rx="13" fill="#fff3db" stroke="#b98728" stroke-width="2"/>
+<text x="835" y="703" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Failure classification</text>
+<text x="835" y="739" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Rejected: preserve draft and confirmed data</text>
+<text x="835" y="768" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Conflict: pause, refresh, review</text>
+<text x="835" y="797" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Unknown outcome: reconcile before repeat</text>
+<rect x="55" y="975" width="630" height="140" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="75" y="1013" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Settled or newer draft</text>
+<text x="75" y="1049" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Saved only if latest intent is acknowledged</text>
+<text x="75" y="1078" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Newer draft survives an older response</text>
+<rect x="815" y="975" width="630" height="140" rx="13" fill="#fff3db" stroke="#b98728" stroke-width="2"/>
+<text x="835" y="1013" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Explicit recovery</text>
+<text x="835" y="1049" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Never attach fresh revision and auto-replay</text>
+<text x="835" y="1078" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">POST add/copy must not duplicate effects</text>
+<text x="50" y="1190" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="400" fill="#24334b">Quantity is absolute. Example: send 2; coalesce unsent 3 then 4; acknowledge 2 without erasing draft 4.</text>
+</svg>

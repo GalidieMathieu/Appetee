@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1060" viewBox="0 0 1500 1060">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#66748a"/></marker></defs>
+<rect width="1500" height="1060" fill="#f5f8fc"/>
+<text x="50" y="61" font-family="DejaVu Sans, sans-serif" font-size="33" font-weight="700" fill="#24334b">01 / System architecture</text>
+<text x="50" y="99" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">One completed action crosses one domain boundary and one atomic backend command.</text>
+<polyline points="350,290 350,360" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="360" y="305" width="60" height="19" fill="#f5f8fc"/>
+<text x="365" y="322" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">intent</text>
+<polyline points="630,432 830,432" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="650" y="405" width="85" height="15" fill="#f5f8fc"/>
+<text x="655" y="418" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">use case</text>
+<polyline points="1130,505 1130,580" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1140" y="531" width="54" height="18" fill="#f5f8fc"/>
+<text x="1145" y="547" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">HTTP</text>
+<polyline points="1130,725 1130,800" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1140" y="748" width="106" height="19" fill="#f5f8fc"/>
+<text x="1145" y="765" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">transaction</text>
+<polyline points="830,873 630,873" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="662" y="841" width="69" height="23" fill="#f5f8fc"/>
+<text x="667" y="858" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">receipt</text>
+<polyline points="70,873 32,873 32,432 70,432" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="155,360 155,290" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="165" y="316" width="116" height="23" fill="#f5f8fc"/>
+<text x="170" y="333" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">readonly VM</text>
+<rect x="70" y="145" width="560" height="145" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="90" y="183" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Pages and components</text>
+<text x="90" y="219" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Bind readonly view models; emit intent</text>
+<text x="90" y="248" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No HTTP, server cache or nutrient math</text>
+<rect x="70" y="360" width="560" height="145" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="90" y="398" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Feature flow and drafts</text>
+<text x="90" y="434" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Task, selection and editable values</text>
+<text x="90" y="463" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Separate state / models / forms files</text>
+<rect x="830" y="360" width="600" height="145" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="850" y="398" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Core domain boundary</text>
+<text x="850" y="434" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Facades, APIs, confirmed stores and sync</text>
+<text x="850" y="463" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">One owner-scoped mutation coordinator</text>
+<rect x="830" y="580" width="600" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="850" y="618" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">API and Application</text>
+<text x="850" y="654" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Session, CSRF, validation and policy</text>
+<text x="850" y="683" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Thin controller; use-case service</text>
+<rect x="830" y="800" width="600" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="850" y="838" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Infrastructure and MySQL</text>
+<text x="850" y="874" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">User lock + revision + complete write</text>
+<text x="850" y="903" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Readback before commit; receipt after commit</text>
+<rect x="70" y="800" width="560" height="145" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="90" y="838" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Confirmed response</text>
+<text x="90" y="874" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Core sync applies receipt exactly once</text>
+<text x="90" y="903" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Readonly selectors update feature UI</text>
+<text x="50" y="1020" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="400" fill="#24334b">Blue: core ownership. Purple: temporary feature/UI state. Green: backend execution.</text>
+</svg>

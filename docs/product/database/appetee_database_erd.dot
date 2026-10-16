@@ -1,0 +1,211 @@
+digraph Appetee_V1_ERD {
+  rankdir=LR;
+  splines=ortho;
+  nodesep=0.45;
+  ranksep=0.75;
+  node [shape=plain, fontname="Arial"];
+  edge [fontname="Arial", fontsize=9];
+
+  USERS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>USERS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">height_cm NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">weight_kg NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">birth_year NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">calculation_sex NULL</TD></TR>
+    </TABLE>>];
+
+  NUTRITION_PLANS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>NUTRITION_PLANS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">user_id FK</TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD></TR>
+      <TR><TD ALIGN="LEFT">mode: EASY | INTERMEDIATE</TD></TR>
+      <TR><TD ALIGN="LEFT">goal NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">activity_level NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">is_recovery NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">default_meals_per_day</TD></TR>
+      <TR><TD ALIGN="LEFT">estimated_rmr_kcal NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">estimated_maintenance_kcal NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">target_calories NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">target_protein_g NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">target_carbs_g NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">target_fat_g NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">calculation_policy_version NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">calculated_at NULL</TD></TR>
+    </TABLE>>];
+
+  MEAL_PLAN_USER_SETTINGS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>MEAL_PLAN_USER_SETTINGS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">user_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">current_nutrition_plan_id FK NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">updated_at</TD></TR>
+    </TABLE>>];
+
+  MEAL_PLAN_TEMPLATES [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>MEAL_PLAN_TEMPLATES</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">user_id FK</TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD></TR>
+      <TR><TD ALIGN="LEFT">created_at</TD></TR>
+      <TR><TD ALIGN="LEFT">updated_at</TD></TR>
+    </TABLE>>];
+
+  MEAL_PLAN_DAYS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>MEAL_PLAN_DAYS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">user_id FK</TD></TR>
+      <TR><TD ALIGN="LEFT">plan_date DATE NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">template_id FK NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">day_index TINYINT NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">created_at</TD></TR>
+      <TR><TD ALIGN="LEFT">updated_at</TD></TR>
+      <TR><TD ALIGN="LEFT"><I>DATED: plan_date set</I></TD></TR>
+      <TR><TD ALIGN="LEFT"><I>TEMPLATE: template_id + day_index set</I></TD></TR>
+    </TABLE>>];
+
+  MEAL_PLAN_DAY_MEALS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>MEAL_PLAN_DAY_MEALS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">meal_plan_day_id FK</TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD></TR>
+      <TR><TD ALIGN="LEFT">sort_order</TD></TR>
+      <TR><TD ALIGN="LEFT">created_at</TD></TR>
+      <TR><TD ALIGN="LEFT">updated_at</TD></TR>
+    </TABLE>>];
+
+  MEAL_PLAN_MEAL_ITEMS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>MEAL_PLAN_MEAL_ITEMS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">meal_plan_day_meal_id FK</TD></TR>
+      <TR><TD ALIGN="LEFT">item_type: RECIPE | MANUAL</TD></TR>
+      <TR><TD ALIGN="LEFT">recipe_id FK NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">quantity INT NULL</TD></TR>
+      <TR><TD ALIGN="LEFT">sort_order</TD></TR>
+      <TR><TD ALIGN="LEFT">created_at</TD></TR>
+      <TR><TD ALIGN="LEFT">updated_at</TD></TR>
+    </TABLE>>];
+
+  MEAL_PLAN_MANUAL_ITEMS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>MEAL_PLAN_MANUAL_ITEMS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">meal_plan_meal_item_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD></TR>
+      <TR><TD ALIGN="LEFT">calories</TD></TR>
+      <TR><TD ALIGN="LEFT">protein_g</TD></TR>
+      <TR><TD ALIGN="LEFT">carbs_g</TD></TR>
+      <TR><TD ALIGN="LEFT">fat_g</TD></TR>
+    </TABLE>>];
+
+  RECIPES [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>RECIPES</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD></TR>
+      <TR><TD ALIGN="LEFT">calories</TD></TR>
+      <TR><TD ALIGN="LEFT">protein_g</TD></TR>
+      <TR><TD ALIGN="LEFT">carbs_g</TD></TR>
+      <TR><TD ALIGN="LEFT">fat_g</TD></TR>
+    </TABLE>>];
+
+  INGREDIENTS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>INGREDIENTS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD></TR>
+    </TABLE>>];
+
+  RECIPE_INGREDIENTS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>RECIPE_INGREDIENTS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">recipe_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">ingredient_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">quantity</TD></TR>
+      <TR><TD ALIGN="LEFT">unit</TD></TR>
+    </TABLE>>];
+
+  INGREDIENT_NUTRITION [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>INGREDIENT_NUTRITION</B></TD></TR>
+      <TR><TD ALIGN="LEFT">ingredient_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">calories</TD></TR>
+      <TR><TD ALIGN="LEFT">protein_g</TD></TR>
+      <TR><TD ALIGN="LEFT">carbs_g</TD></TR>
+      <TR><TD ALIGN="LEFT">fat_g</TD></TR>
+    </TABLE>>];
+
+  DIETS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>DIETS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">name</TD></TR>
+    </TABLE>>];
+
+  USER_DIETS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>USER_DIETS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">user_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">diet_id PK, FK</TD></TR>
+    </TABLE>>];
+
+  DIET_RECIPES [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>DIET_RECIPES</B></TD></TR>
+      <TR><TD ALIGN="LEFT">diet_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">recipe_id PK, FK</TD></TR>
+    </TABLE>>];
+
+  USER_INGREDIENT_RESTRICTIONS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>USER_INGREDIENT_RESTRICTIONS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">user_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">ingredient_id PK, FK</TD></TR>
+    </TABLE>>];
+
+  FAVORITE_RECIPES [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>FAVORITE_RECIPES</B></TD></TR>
+      <TR><TD ALIGN="LEFT">user_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">recipe_id PK, FK</TD></TR>
+      <TR><TD ALIGN="LEFT">created_at</TD></TR>
+    </TABLE>>];
+
+  PASSWORD_RESET_TOKENS [label=<
+    <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5">
+      <TR><TD><B>PASSWORD_RESET_TOKENS</B></TD></TR>
+      <TR><TD ALIGN="LEFT">id PK</TD></TR>
+      <TR><TD ALIGN="LEFT">user_id FK</TD></TR>
+      <TR><TD ALIGN="LEFT">token_hash</TD></TR>
+      <TR><TD ALIGN="LEFT">expires_at</TD></TR>
+    </TABLE>>];
+
+  USERS -> NUTRITION_PLANS [label="1 : many"];
+  USERS -> MEAL_PLAN_USER_SETTINGS [label="1 : 0..1"];
+  NUTRITION_PLANS -> MEAL_PLAN_USER_SETTINGS [label="current plan"];
+  USERS -> MEAL_PLAN_TEMPLATES [label="1 : many"];
+  USERS -> MEAL_PLAN_DAYS [label="1 : many dated days"];
+  MEAL_PLAN_TEMPLATES -> MEAL_PLAN_DAYS [label="1 : 0..7 template days"];
+  MEAL_PLAN_DAYS -> MEAL_PLAN_DAY_MEALS [label="1 : many"];
+  MEAL_PLAN_DAY_MEALS -> MEAL_PLAN_MEAL_ITEMS [label="1 : many"];
+  RECIPES -> MEAL_PLAN_MEAL_ITEMS [label="recipe item"];
+  MEAL_PLAN_MEAL_ITEMS -> MEAL_PLAN_MANUAL_ITEMS [label="manual detail"];
+  RECIPES -> RECIPE_INGREDIENTS [label="1 : many"];
+  INGREDIENTS -> RECIPE_INGREDIENTS [label="1 : many"];
+  INGREDIENTS -> INGREDIENT_NUTRITION [label="1 : 0..1"];
+  USERS -> USER_DIETS [label="1 : many"];
+  DIETS -> USER_DIETS [label="1 : many"];
+  DIETS -> DIET_RECIPES [label="1 : many"];
+  RECIPES -> DIET_RECIPES [label="1 : many"];
+  USERS -> USER_INGREDIENT_RESTRICTIONS [label="1 : many"];
+  INGREDIENTS -> USER_INGREDIENT_RESTRICTIONS [label="1 : many"];
+  USERS -> FAVORITE_RECIPES [label="1 : many"];
+  RECIPES -> FAVORITE_RECIPES [label="1 : many"];
+  USERS -> PASSWORD_RESET_TOKENS [label="1 : many"];
+}

@@ -1,0 +1,10 @@
+flowchart TD
+  Mode{"Plan mode"} -->|Easy| Easy["Name and meal count"]
+  Mode -->|Intermediate| Inputs["Feature draft inputs"]
+  Inputs --> Preview["Core API to server preview"]
+  Preview --> Review["Ephemeral review with policy / year"]
+  Review --> Save["Verify evidence and recompute server-side"]
+  Easy --> Persist["Atomic plan creation"]
+  Save --> Persist
+  Persist --> Core["Core confirmed plan / settings / profile"]
+  Metadata["Metadata-only edit"] --> Preserve["Preserve prior calculation"]

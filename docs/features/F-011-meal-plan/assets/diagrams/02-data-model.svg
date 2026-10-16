@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1340" viewBox="0 0 1500 1340">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#66748a"/></marker></defs>
+<rect width="1500" height="1340" fill="#f5f8fc"/>
+<text x="50" y="61" font-family="DejaVu Sans, sans-serif" font-size="33" font-weight="700" fill="#24334b">02 / Canonical data relationships</text>
+<text x="50" y="99" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Six new tables; existing users and recipes remain canonical. A week is a date range.</text>
+<polyline points="525,220 370,220 370,365" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="255" y="298" width="116" height="23" fill="#f5f8fc"/>
+<text x="260" y="315" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">0..1 settings</text>
+<polyline points="975,220 1140,220 1140,365" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1150" y="298" width="95" height="23" fill="#f5f8fc"/>
+<text x="1155" y="315" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">0..N plans</text>
+<polyline points="525,255 25,255 25,683 60,683" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="30" y="559" width="90" height="23" fill="#f5f8fc"/>
+<text x="35" y="576" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">0..N days</text>
+<polyline points="680,441 840,441" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="695" y="406" width="74" height="18" fill="#f5f8fc"/>
+<text x="700" y="422" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">Current</text>
+<polyline points="370,760 370,845" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="380" y="787" width="101" height="19" fill="#f5f8fc"/>
+<text x="385" y="804" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">0..N meals</text>
+<polyline points="680,915 840,915" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="692" y="880" width="97" height="19" fill="#f5f8fc"/>
+<text x="697" y="897" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">0..N items</text>
+<polyline points="1140,760 1140,845" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1150" y="787" width="94" height="23" fill="#f5f8fc"/>
+<text x="1155" y="804" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">Recipe FK</text>
+<polyline points="1140,990 1140,1080" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1150" y="1020" width="96" height="19" fill="#f5f8fc"/>
+<text x="1155" y="1037" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">0..1 detail</text>
+<rect x="525" y="140" width="450" height="155" rx="13" fill="#ffffff" stroke="#8192aa" stroke-width="2"/>
+<text x="545" y="178" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">users (existing)</text>
+<text x="545" y="214" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">id; optional complete profile</text>
+<text x="545" y="243" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Owns plans and dated days</text>
+<text x="545" y="272" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Signed INT identifiers</text>
+<rect x="60" y="365" width="620" height="155" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="80" y="403" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">meal_plan_settings</text>
+<text x="80" y="439" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">user_id PK / FK; revision BIGINT</text>
+<text x="80" y="468" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">current_nutrition_plan_id nullable</text>
+<text x="80" y="497" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Composite owner + plan FK</text>
+<rect x="840" y="365" width="600" height="155" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="860" y="403" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">nutrition_plans</text>
+<text x="860" y="439" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">id; user_id; name; mode; default count</text>
+<text x="860" y="468" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Stored calculation inputs and targets</text>
+<text x="860" y="497" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Independent of planner dates</text>
+<rect x="60" y="605" width="620" height="155" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="80" y="643" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">meal_plan_days</text>
+<text x="80" y="679" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">id; user_id; date</text>
+<text x="80" y="708" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">UNIQUE (user_id, date)</text>
+<text x="80" y="737" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No plan FK or target snapshot</text>
+<rect x="840" y="605" width="600" height="155" rx="13" fill="#ffffff" stroke="#8192aa" stroke-width="2"/>
+<text x="860" y="643" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">recipes (existing)</text>
+<text x="860" y="679" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Canonical recipe and live nutrition</text>
+<text x="860" y="708" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">fat_total nullable when unknown</text>
+<text x="860" y="737" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No copied recipe snapshot</text>
+<rect x="60" y="845" width="620" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="80" y="883" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">meal_plan_meals</text>
+<text x="80" y="919" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">id; day_id; name; sort_order</text>
+<text x="80" y="948" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Day deletion cascades descendants</text>
+<rect x="840" y="845" width="600" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="860" y="883" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">meal_plan_items</text>
+<text x="860" y="919" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">id; meal_id; type; sort_order</text>
+<text x="860" y="948" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Recipe: recipe_id + whole quantity</text>
+<text x="860" y="977" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Manual: no recipe_id or quantity</text>
+<rect x="840" y="1080" width="600" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="860" y="1118" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">meal_plan_manual_items</text>
+<text x="860" y="1154" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">item_id PK / FK; name; four totals</text>
+<text x="860" y="1183" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">One detail per Manual parent item</text>
+<text x="860" y="1212" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Parent deletion cascades detail</text>
+<text x="50" y="1300" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="400" fill="#24334b">Days belong directly to users. Current uses an owner-scoped composite FK. Recipe deletion is restricted.</text>
+</svg>

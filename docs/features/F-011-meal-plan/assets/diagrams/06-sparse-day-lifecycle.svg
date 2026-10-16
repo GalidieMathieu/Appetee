@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1175" viewBox="0 0 1500 1175">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#66748a"/></marker></defs>
+<rect width="1500" height="1175" fill="#f5f8fc"/>
+<text x="50" y="61" font-family="DejaVu Sans, sans-serif" font-size="33" font-weight="700" fill="#24334b">06 / Sparse day lifecycle</text>
+<text x="50" y="99" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Virtual defaults are read projections. Persistence records only deliberate user actions.</text>
+<polyline points="560,290 350,338 350,395" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="240" y="325" width="91" height="23" fill="#f5f8fc"/>
+<text x="245" y="342" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">view only</text>
+<polyline points="940,290 1150,338 1150,395" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1155" y="325" width="108" height="19" fill="#f5f8fc"/>
+<text x="1160" y="342" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">save action</text>
+<polyline points="1150,540 1150,655" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="1150,800 1150,915" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1165" y="840" width="169" height="19" fill="#f5f8fc"/>
+<text x="1170" y="857" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">last meal removed</text>
+<polyline points="855,985 645,985" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="495" y="145" width="510" height="145" rx="13" fill="#ffffff" stroke="#8192aa" stroke-width="2"/>
+<text x="515" y="183" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Absent day</text>
+<text x="515" y="219" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No day row</text>
+<text x="515" y="248" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Current may supply virtual defaults</text>
+<rect x="55" y="395" width="590" height="145" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="75" y="433" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Open / cancel task</text>
+<text x="75" y="469" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Selection and draft only</text>
+<text x="75" y="498" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No HTTP write; day stays absent</text>
+<rect x="855" y="395" width="590" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="875" y="433" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Completed first action</text>
+<text x="875" y="469" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Rename / add recipe / add manual</text>
+<text x="875" y="498" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Create day + selected meal only</text>
+<rect x="855" y="655" width="590" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="875" y="693" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Saved day and meal</text>
+<text x="875" y="729" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Saved structure replaces all virtual slots</text>
+<text x="875" y="758" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Delete final item keeps empty meal</text>
+<rect x="855" y="915" width="590" height="145" rx="13" fill="#e6f3ee" stroke="#35856a" stroke-width="2"/>
+<text x="875" y="953" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Saved empty day</text>
+<text x="875" y="989" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Delete final meal keeps day row</text>
+<text x="875" y="1018" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No automatic virtual refill</text>
+<rect x="55" y="915" width="590" height="145" rx="13" fill="#fff3db" stroke="#b98728" stroke-width="2"/>
+<text x="75" y="953" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Copy source semantics</text>
+<text x="75" y="989" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Absent source clears destination</text>
+<text x="75" y="1018" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Saved-empty source stays saved-empty</text>
+<text x="50" y="1135" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="400" fill="#24334b">No week table. No day target snapshot. No automatic deletion of an empty saved day.</text>
+</svg>

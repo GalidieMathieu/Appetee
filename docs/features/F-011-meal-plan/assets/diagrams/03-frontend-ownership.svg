@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1015" viewBox="0 0 1500 1015">
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#66748a"/></marker></defs>
+<rect width="1500" height="1015" fill="#f5f8fc"/>
+<text x="50" y="61" font-family="DejaVu Sans, sans-serif" font-size="33" font-weight="700" fill="#24334b">03 / Frontend state ownership</text>
+<text x="50" y="99" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Domain location follows responsibility; a scoped provider can still belong in core.</text>
+<polyline points="365,300 365,405" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="375" y="342" width="83" height="19" fill="#f5f8fc"/>
+<text x="380" y="359" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">UI intent</text>
+<polyline points="655,492 845,492" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="669" y="458" width="85" height="15" fill="#f5f8fc"/>
+<text x="674" y="471" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">use case</text>
+<polyline points="1135,585 1135,720" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="1145" y="637" width="142" height="23" fill="#f5f8fc"/>
+<text x="1150" y="654" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">sync / selectors</text>
+<polyline points="845,810 745,810 745,550 655,550" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="745" y="637" width="84" height="23" fill="#f5f8fc"/>
+<text x="750" y="654" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">readonly</text>
+<polyline points="365,585 365,720" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="375" y="637" width="123" height="23" fill="#f5f8fc"/>
+<text x="380" y="654" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">apply criteria</text>
+<polyline points="75,810 32,810 32,492 75,492" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<polyline points="150,405 150,300" fill="none" stroke="#66748a" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="160" y="342" width="116" height="23" fill="#f5f8fc"/>
+<text x="165" y="359" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="400" fill="#24334b">readonly VM</text>
+<rect x="75" y="145" width="580" height="155" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="95" y="183" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Feature UI / page.ts</text>
+<text x="95" y="219" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Composition, focus and intent bindings</text>
+<text x="95" y="248" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Readonly VM; no DTO arrays or API calls</text>
+<text x="95" y="277" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">No form, queue or nutrition ownership</text>
+<rect x="75" y="405" width="580" height="180" rx="13" fill="#f1eafb" stroke="#8560b1" stroke-width="2"/>
+<text x="95" y="443" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Feature state / models / forms</text>
+<text x="95" y="479" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Navigation, selection, typed form drafts</text>
+<text x="95" y="508" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Ephemeral unsaved calculation preview</text>
+<text x="95" y="537" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Temporary drag / quantity overlays</text>
+<text x="95" y="566" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Never an authoritative server cache</text>
+<rect x="845" y="405" width="580" height="180" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="865" y="443" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Core domain facades</text>
+<text x="865" y="479" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Reusable use cases and readonly selectors</text>
+<text x="865" y="508" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Core APIs perform transport</text>
+<text x="865" y="537" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Core coordinator serializes writes</text>
+<text x="865" y="566" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Core sync applies confirmed receipts</text>
+<rect x="845" y="720" width="580" height="180" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="865" y="758" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Core confirmed stores</text>
+<text x="865" y="794" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Planner ranges; plan summaries and details</text>
+<text x="865" y="823" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Saved nutrition profile; current context</text>
+<text x="865" y="852" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Separate query state and revision evidence</text>
+<text x="865" y="881" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Reset through existing identity lifecycle</text>
+<rect x="75" y="720" width="580" height="180" rx="13" fill="#e6f0ff" stroke="#3269ae" stroke-width="2"/>
+<text x="95" y="758" font-family="DejaVu Sans, sans-serif" font-size="23" font-weight="700" fill="#24334b">Core scoped recipe picker</text>
+<text x="95" y="794" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Applied criteria, cursor and query results</text>
+<text x="95" y="823" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Provided once per planner workspace</text>
+<text x="95" y="852" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Isolated from main recipe discovery</text>
+<text x="95" y="881" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="400" fill="#24334b">Reset on root identity reset; dispose on exit</text>
+<text x="50" y="975" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="400" fill="#24334b">Core never imports features. Feature drafts never replace core domain data. UI never injects writable stores.</text>
+</svg>

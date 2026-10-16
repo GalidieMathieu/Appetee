@@ -1,0 +1,8 @@
+flowchart TD
+  Route["Feature route intent"] --> Read["Core captures read token"]
+  Read --> API["Coherent API range read"]
+  API --> Gate{"Identity / sequence / epoch valid?"}
+  Gate -->|No| Drop["Discard; refresh if needed"]
+  Gate -->|Yes| Revision["Observe context; stale other old views"]
+  Revision --> Store["Core stores complete range"]
+  Store --> UI["Readonly selectors to feature VM"]

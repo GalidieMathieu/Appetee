@@ -1,0 +1,9 @@
+flowchart TD
+  Review["Review source and destination"] --> Lock["Owner lock and revision check"]
+  Lock --> Source["Read all source before deleting"]
+  Source --> Valid{"All rules and recipes valid?"}
+  Valid -->|No| Rollback["Rollback everything"]
+  Valid -->|Yes| Copy["Replace seven destinations in one transaction"]
+  Copy -->|Failure| Rollback
+  Copy -->|Success| Commit["Increment once; readback; commit"]
+  Commit --> Core["Core sync adopts receipt"]

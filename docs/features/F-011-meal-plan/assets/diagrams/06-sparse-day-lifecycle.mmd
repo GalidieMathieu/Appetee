@@ -1,0 +1,9 @@
+flowchart TD
+  Absent["Absent day"] -->|Open / cancel| Absent
+  Absent -->|Completed action| Saved["Saved day; selected meal only"]
+  Saved -->|Remove last item| Meal["Saved empty meal"]
+  Meal -->|Remove last meal| Empty["Saved empty day"]
+  Saved -->|Remove last meal| Empty
+  Empty -->|New Meal| Saved
+  Source{"Copy source state"} -->|Absent| Clear["Delete destination day"]
+  Source -->|Saved empty| Keep["Persist empty destination day"]
